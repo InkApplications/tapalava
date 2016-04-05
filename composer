@@ -1,0 +1,164 @@
+#!/usr/bin/env php
+<?php
+/**
+ * Composer Wrapper
+ *
+ * You may use this file as you would the standard composer command line tool.
+ * This script is made to wrap the composer script. It will download composer
+ * and place the executable phar file to the project if  it is not already available.
+ *  When the executable phar is available this script will forward all
+ * commands to the composer executable.
+ * To change/update composer version, see the config below.
+ *
+ * @copyright 2015 Maxwell Vandervelde
+ * @license MIT <http://opensource.org/licenses/MIT>
+ * @author Maxwell Vandervelde <Max@MaxVandervelde.com>
+ */
+
+namespace ComposerWrapper;
+
+/**
+ * Version of composer to download.
+ */
+const COMPOSER_VERSION = '1.0.0-beta1';
+
+/**
+ * Directory to download composer file to.
+ *
+ * If null, this will be the user's home directory (recommended)
+ *
+ * Since this will be the location of the unwrapped composer executable,
+ * this should point to a directory that is ignored by git.
+ *
+ * Another common usage is a build directory, specific to the project.
+ * This can be set like so:
+ *     const BUILD_DIR = __DIR__ . DIRECTORY_SEPARATOR . 'build';
+ */
+const BUILD_DIR = null;
+
+/************ END OF CONFIG ************/
+
+/**
+ * Exit code for when we can't find a valid place to put the composer executable.
+ */
+const ERROR_CODE_BUILD_DIR_MISSING = 1;
+
+/**
+ * Exit code used when we can't write to the path where we want to put the
+ * composer executable.
+ */
+const ERROR_CODE_EXECUTABLE_WRITE_FAIL = 2;
+
+/**
+ * Exit code used when the executable could't be downloaded / found.
+ */
+const ERROR_CODE_EXECUTABLE_DOWNLOAD_FAIL = 3;
+
+/**
+ * URL to fetch composer from.
+ *
+ * This should point to Composer's download page, and shouldn't need to change
+ * unless composer breaks their download links (hopefully never)
+ *
+ * Note: For security, this should always be from a trusted SSL protected source.
+ */
+function getDownloadUri()
+{
+    return 'https://getcomposer.org/download/' . COMPOSER_VERSION . '/composer.phar';
+}
+
+/**
+ * Locate a directory to put the composer executable.
+ */
+function getBuildDir()
+{
+    if (null !== BUILD_DIR) {
+        return rtrim(BUILD_DIR, '/');
+    } else if (!empty($_SERVER['HOME'])) {
+        return rtrim($_SERVER['HOME'], '/') . DIRECTORY_SEPARATOR . '.composer';;
+    } else if (!empty($_SERVER['HOMEDRIVE']) && !empty($_SERVER['HOMEPATH'])) {
+        return rtrim($_SERVER['HOMEDRIVE'] . $_SERVER['HOMEPATH'], '\\/') . DIRECTORY_SEPARATOR . '.composer';
+    } else {
+        echo "ERROR: Could not locate home directory. Consider setting a build directory in the Composer wrapper\n";
+        die(ERROR_CODE_BUILD_DIR_MISSING);
+    }
+}
+
+/**
+ * Get the name of the local executable file.
+ */
+function getExecutableName()
+{
+    return 'composer-' . COMPOSER_VERSION . '.phar';
+}
+
+/**
+ * Get the full path of the executable file (including the file name)
+ */
+function getExecutablePath()
+{
+    $buildDir = getBuildDir();
+    $executableName = getExecutableName();
+
+    return $buildDir . DIRECTORY_SEPARATOR . $executableName;
+}
+
+/**
+ * Determine if there is a local copy of this executable.
+ */
+function executableAvailable()
+{
+    return file_exists(getExecutablePath());
+}
+
+/**
+ * Fetch the composer executable from the remote URL.
+ */
+function downloadFile()
+{
+    $executablePath = getExecutablePath();
+    $executableName = getExecutableName();
+    $buildDir = getBuildDir();
+    $downloadUri = getDownloadUri();
+
+    echo "> $executableName not found, attempting to download\n";
+    echo "> Using URL: $downloadUri\n";
+
+    if (false === is_dir($buildDir)) {
+        echo "> Build Directory missing, creating at: $buildDir \r\n";
+        mkdir($buildDir);
+    }
+
+    $handle = fopen($executablePath, 'w');
+    if (!$handle) {
+        echo "ERROR: Could not create file: $executablePath";
+        die(ERROR_CODE_EXECUTABLE_WRITE_FAIL);
+    }
+    $contents = file_get_contents($downloadUri);
+    if (false === $contents) {
+        unlink($executablePath);
+        echo "ERROR: Error downloading executable from: $downloadUri";
+        die(ERROR_CODE_EXECUTABLE_DOWNLOAD_FAIL);
+    }
+    if (false === fwrite($handle, $contents)) {
+        unlink($executablePath);
+        echo "ERROR: Could not create file: $executablePath";
+        die(ERROR_CODE_EXECUTABLE_WRITE_FAIL);
+    }
+
+    chmod($executablePath, 0777);
+}
+
+/**
+ * Download the composer from a remote url, only if it is not already available
+ * locally.
+ */
+function downloadIfNeeded()
+{
+    if (false === executableAvailable()) {
+        downloadFile();
+    }
+}
+
+downloadIfNeeded();
+require 'phar://' . getExecutablePath() . '/bin/composer';
