@@ -1,0 +1,15 @@
+{
+  "name": "tapalava.com",
+  "authors": [
+    "Maxwell Vandervelde <Max@MaxVandervelde.com>"
+  ],
+  "description": "An event manager",
+  "main": "",
+  "moduleType": [],
+  "license": "propriatary",
+  "homepage": "tapalava.com",
+  "private": true,
+  "dependencies": {
+    "bootstrap": "v4.0.0-alpha.2"
+  }
+}

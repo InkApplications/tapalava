@@ -1,0 +1,59 @@
+/**
+ * Global site header and navigation on every page.
+ */
+@import "colors";
+
+.site-header
+{
+    margin-left: 0;
+    margin-right: 0;
+
+    h1
+    {
+        font-weight: 100;
+        font-size: 48px;
+        display: inline-block;
+        margin: 0;
+        padding: 0 8px;
+        line-height: 64px;
+    }
+
+    nav
+    {
+        margin-bottom: -6px;
+    }
+
+    ul
+    {
+        display: inline-block;
+        padding-left: 0;
+        margin-bottom: 0;
+    }
+
+    ul>li
+    {
+        float: left;
+        list-style: none;
+        display: inline-block;
+    }
+    ul>li>a
+    {
+        display: inline-block;
+        color: $foregroundInverse;
+        line-height: 70px;
+        font-weight: 300;
+        padding: 0 16px;
+
+        &:hover,
+        &:focus
+        {
+            text-decoration: none;
+            background-color: lighten($primary, 5%);
+        }
+    }
+
+    .account
+    {
+        float: right;
+    }
+}

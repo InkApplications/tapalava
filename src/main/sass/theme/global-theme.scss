@@ -1,0 +1,28 @@
+/**
+ * Styles that are applicable to every page on the site.
+ */
+
+$enable-flex: true;
+
+@import "../../../../vendor/javascript/bootstrap/scss/bootstrap";
+@import "colors";
+@import "header";
+@import "footer";
+
+body
+{
+    background: $primary;
+    color: $foregroundInverse;
+    font-family: 'Lato', Helvetica, sans-serif;
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+.page
+{
+    background-color: $background;
+    color: $foreground;
+    padding: 24px 0 80px 0;
+    flex: 1;
+}

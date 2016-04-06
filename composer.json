@@ -48,7 +48,8 @@
     "config": {
         "platform": {
             "php": "5.5.9"
-        }
+        },
+        "vendor-dir": "vendor/php"
     },
     "extra": {
         "symfony-app-dir": "app",

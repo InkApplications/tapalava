@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>{% block title %}Tapalava{% endblock %}</title>
+    {% block stylesheets %}
+        <link href='https://fonts.googleapis.com/css?family=Lato:400,300,700,100' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" href="{{ asset('css/global-theme.css') }}" />
+    {% endblock %}
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+</head>
+<body>
+{% block body %}
+    <header class="site-header row">
+        <div class="col-md-2">
+            <h1>Tapalava</h1>
+        </div>
+        <nav class="col-md-10">
+            <ul>
+                <li class="active">
+                    <a href="#">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li>
+                    <a href="#">Pricing</a>
+                </li>
+                <li>
+                    <a href="#">About</a>
+                </li>
+            </ul>
+            <ul class="account">
+                <li>
+                    <a href="#">Login</a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+    <div class="page">
+        {% block content %}
+            <div class="container">
+                <section>
+                    <h1>Style Guide</h1>
+                    <p>
+                        Donec rutrum congue leo eget malesuada. Vestibulum ac
+                        diam sit amet quam vehicula elementum sed sit amet dui.
+                        Vestibulum ante ipsum primis in faucibus orci luctus et
+                        ultrices posuere cubilia Curae; Donec velit neque,
+                        auctor sit amet aliquam vel, ullamcorper sit amet
+                        ligula. Nulla porttitor accumsan tincidunt. Praesent
+                        sapien massa, convallis a pellentesque nec, egestas non
+                        nisi. Curabitur arcu erat, accumsan id imperdiet et,
+                        porttitor at sem. Donec rutrum congue leo eget malesuada.
+                        Quisque velit nisi, pretium ut lacinia in, elementum id
+                        enim. Pellentesque in ipsum id orci porta dapibus.
+                        Donec rutrum congue leo eget malesuada.
+                    </p>
+                    <p>
+                        Donec sollicitudin molestie malesuada. Sed porttitor
+                        lectus nibh. Donec sollicitudin molestie malesuada.
+                        Donec rutrum congue leo eget malesuada. Vivamus suscipit
+                        tortor eget felis porttitor volutpat. Sed porttitor
+                        lectus nibh. Nulla quis lorem ut libero malesuada
+                        feugiat. Proin eget tortor risus. Proin eget tortor
+                        risus. Curabitur non nulla sit amet nisl tempus
+                        convallis quis ac lectus.
+                    </p>
+                    <a href="#" class="btn btn-primary">Foo</a>
+                </section>
+            </div>
+        {% endblock %}
+    </div>
+    <footer class="site-footer">
+        <p class="copyright">Copyright 2016 Ink Applications, LLC. All Rights Reserved.</p>
+    </footer>
+{% endblock %}
+{% block javascripts %}
+    <script src="{{ asset('js/global.js') }}"></script>
+{% endblock %}
+</body>
+</html>

@@ -1,0 +1,15 @@
+/**
+ * Global site footer on every page.
+ */
+
+.site-footer
+{
+    min-height: 100px;
+
+    .copyright
+    {
+        text-align: center;
+        margin: 16px;
+        font-weight: 300;
+    }
+}
