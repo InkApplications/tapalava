@@ -1,6 +1,6 @@
 <?php
 
-namespace ScheduleBundle;
+namespace Tapalava\ScheduleBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
