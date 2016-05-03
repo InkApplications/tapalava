@@ -1,12 +1,18 @@
 <?php
 
-namespace Tests\AppBundle\Controller;
+namespace Tapalava\ScheduleBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class DefaultControllerTest extends WebTestCase
 {
-    public function testIndex()
+    /**
+     * Homepage should return successfully.
+     *
+     * @test
+     * @group functional
+     */
+    public function homepage()
     {
         $client = static::createClient();
 

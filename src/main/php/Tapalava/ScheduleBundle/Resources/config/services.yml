@@ -1,1 +1,3 @@
 services:
+    schedule.repository:
+        class: Tapalava\Schedule\FakeScheduleRepository

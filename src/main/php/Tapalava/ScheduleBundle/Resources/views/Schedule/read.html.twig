@@ -1,0 +1,25 @@
+{% extends '::default.html.twig' %}
+
+{% block content %}
+    <div class="container">
+        <section>
+            <h1>{{ schedule.name | default("schedule.name_empty" | trans) }}</h1>
+            <ul>
+                {% for day in schedule.days %}
+                    <li>{{ day | date("F d, Y") }}</li>
+                {% endfor %}
+            </ul>
+            {% if schedule.location is not empty %}
+                <p>{{ schedule.location }}</p>
+            {% endif %}
+            <p>{{ schedule.description | default("schedule.description_empty" | trans) | escape | markdown }}</p>
+            {% if schedule.tags is not empty %}
+            <ul>
+                {% for tag in schedule.tags %}
+                    <li>{{ tag }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </section>
+    </div>
+{% endblock %}
