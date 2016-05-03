@@ -1,0 +1,11 @@
+{% extends '::default.html.twig' %}
+
+{% block content %}
+    <div class="container">
+        <section>
+            <h1>
+                {{ "event.index_title" | trans({"%schedule.name%": schedule.name}) }}
+            </h1>
+        </section>
+    </div>
+{% endblock %}

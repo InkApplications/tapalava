@@ -1,2 +1,4 @@
 schedule.description_empty: "*No description provided*"
 schedule.name_empty: "Untitled Event"
+
+event.index_title: "Events for %schedule.name%"
