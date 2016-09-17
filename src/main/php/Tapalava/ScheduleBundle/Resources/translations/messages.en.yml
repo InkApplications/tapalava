@@ -2,3 +2,6 @@ schedule.description_empty: "*No description provided*"
 schedule.name_empty: "Untitled Event"
 
 event.index_title: "Events for %schedule.name%"
+event.timestamp: "From %event.start% to %event.end%"
+event.date_format: "F d, Y H:i"
+event.index_empty: "There are no events for this schedule"

@@ -6,6 +6,15 @@
             <h1>
                 {{ "event.index_title" | trans({"%schedule.name%": schedule.name}) }}
             </h1>
+            {% for event in events %}
+                <article>
+                    <h1>{{ event.name }}</h1>
+                    <p>{{ event.description }}</p>
+                    <p>{{ "event.timestamp" | trans({"%event.start%": event.start | date("event.date_format" | trans), "%event.end%": event.end | date("event.date_format" | trans)}) }}</p>
+                </article>
+            {% else %}
+                <p>{{ "event.index_empty" | trans }}</p>
+            {% endfor %}
         </section>
     </div>
 {% endblock %}

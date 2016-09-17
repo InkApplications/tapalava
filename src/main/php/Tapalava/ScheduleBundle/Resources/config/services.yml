@@ -1,3 +1,6 @@
 services:
     schedule.repository:
         class: Tapalava\Schedule\FakeScheduleRepository
+
+    event.repository:
+        class: Tapalava\Event\FakeEventRepository

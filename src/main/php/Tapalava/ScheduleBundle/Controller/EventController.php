@@ -9,6 +9,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
+use Tapalava\Event\EventNotFoundException;
+use Tapalava\Event\EventRepository;
 use Tapalava\Schedule\ScheduleNotFoundException;
 use Tapalava\Schedule\ScheduleRepository;
 
@@ -25,14 +27,18 @@ class EventController
      */
     private $scheduleRepository;
 
+    private $eventRepository;
+
     /**
      * @InjectParams({
-     *     "scheduleRepository" = @Inject("schedule.repository")
+     *     "scheduleRepository" = @Inject("schedule.repository"),
+     *     "eventRepository" = @Inject("event.repository")
      * })
      */
-    public function __construct(ScheduleRepository $scheduleRepository)
+    public function __construct(ScheduleRepository $scheduleRepository, EventRepository $eventRepository)
     {
         $this->scheduleRepository = $scheduleRepository;
+        $this->eventRepository = $eventRepository;
     }
 
     /**
@@ -46,7 +52,7 @@ class EventController
         try {
             return [
                 'schedule' => $this->scheduleRepository->find($schedule),
-                'events' => [],
+                'events' => $this->eventRepository->findAll($schedule),
             ];
         } catch (ScheduleNotFoundException $e) {
             throw new NotFoundHttpException("Schedule was not found");
