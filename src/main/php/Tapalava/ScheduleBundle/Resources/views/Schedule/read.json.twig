@@ -1,0 +1,6 @@
+{
+    "links": {
+        {{ url('schedule-read', {id: 3}) }}
+    },
+    "data": {{ schedule | serialize('json') | raw }}
+}

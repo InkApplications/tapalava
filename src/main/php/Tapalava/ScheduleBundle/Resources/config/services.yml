@@ -4,3 +4,8 @@ services:
 
     event.repository:
         class: Tapalava\Event\FakeEventRepository
+
+    format_content_type:
+        class: Tapalava\ScheduleBundle\Response\FormatContentType
+        tags:
+            - { name: kernel.event_listener, event: kernel.response, method: onResponse }

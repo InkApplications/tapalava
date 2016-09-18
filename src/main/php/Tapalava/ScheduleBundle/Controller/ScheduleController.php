@@ -3,6 +3,8 @@
 namespace Tapalava\ScheduleBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -18,7 +20,7 @@ use Tapalava\Schedule\ScheduleRepository;
  * @Route("/schedule")
  * @author Maxwell Vandervelde <Max@MaxVandervelde.com>
  */
-class ScheduleController
+class ScheduleController extends Controller
 {
     /**
      * @var ScheduleRepository For accessing schedule data.
@@ -39,7 +41,7 @@ class ScheduleController
      * Read the Information about a schedule.
      *
      * @Template
-     * @Route("/{id}", methods={"GET"}, name="schedule-read")
+     * @Route("/{id}.{_format}", methods={"GET"}, name="schedule-read", defaults={"_format" = "html"})
      * @param string $id The UUID of the schedule to display information about.
      * @return array templating information
      */
