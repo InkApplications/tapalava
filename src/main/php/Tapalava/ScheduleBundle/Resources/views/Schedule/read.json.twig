@@ -1,6 +1,7 @@
 {
     "links": {
-        "self": "{{ url('schedule-read', {id: schedule.id, _format: "json"}) }}"
+        "self": "{{ url('schedule-read', {id: schedule.id, _format: "json"}) }}",
+        "events": "{{ url('events-read', {schedule: schedule.id, _format: "json"}) }}"
     },
     "data": {{ schedule | serialize('json') | raw }}
 }

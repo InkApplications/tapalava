@@ -44,7 +44,7 @@ class EventController
     /**
      * List all of the events for a schedule.
      *
-     * @Route("/events", methods={"GET"}, name="events-read")
+     * @Route("/events.{_format}", methods={"GET"}, name="events-read", defaults={"_format" = "html"})
      * @Template
      */
     public function indexAction($schedule)
