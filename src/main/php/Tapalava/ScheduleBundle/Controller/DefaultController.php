@@ -17,7 +17,7 @@ class DefaultController extends Controller
      * The Default page of the website.
      *
      * @Template
-     * @Route("/", methods={"GET"}, name="home")
+     * @Route("/", methods={"GET"}, name="default")
      */
     public function defaultAction()
     {

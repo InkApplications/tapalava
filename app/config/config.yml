@@ -34,11 +34,6 @@ framework:
     http_method_override: true
     assets: ~
 
-fos_user:
-    db_driver: orm
-    firewall_name: main
-    user_class: Tapalava\AuthenticationBundle\Entity\User
-
 # Twig Configuration
 twig:
     debug:            "%kernel.debug%"

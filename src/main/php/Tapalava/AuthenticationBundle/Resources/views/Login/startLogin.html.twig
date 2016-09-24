@@ -1,0 +1,21 @@
+{% extends '::default.html.twig' %}
+
+{% block content %}
+    <div class="container">
+        <div class="simple-form-container">
+            <section class="card simple-form-block">
+                <form method="post" action="{{ url('login-send-code') }}" class="card-block">
+                    <h1 class="card-title">Staff Login</h1>
+                    <fieldset class="form-group">
+                        <label for="email" class="">Your Email Address</label>
+                        <input id="email" class="form-control" name="email" type="email" placeholder="John@gmail.com" />
+                    </fieldset>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Email Login Link</button>
+                    </div>
+                </form>
+            </section>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,26 @@
+services:
+    user.repository:
+        class: Tapalava\User\FakeUserRepository
+
+    link_authenticator:
+        class: InkApplications\Knock\LinkAuthenticator
+        arguments:
+            - "@router"
+            - "@security.password_encoder"
+            - "@user.repository"
+
+    login_sender:
+        class: Tapalava\AuthenticationBundle\LoginSender
+        arguments:
+            - "@mailer"
+            - "@twig"
+
+    knock.login:
+        class: InkApplications\Knock\Login
+        arguments:
+            - "@user.repository"
+            - "@security.password_encoder"
+            - "@login_sender"
+
+    login_provider:
+        class: Tapalava\User\FakeUserProvider

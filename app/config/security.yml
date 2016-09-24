@@ -1,23 +1,32 @@
 security:
-    providers:
-        fos_userbundle:
-            id: fos_user.user_provider.username
-
     encoders:
-        FOS\UserBundle\Model\UserInterface: bcrypt
+       Tapalava\User\User: bcrypt
 
     role_hierarchy:
-        ROLE_ADMIN: ROLE_USER
-        ROLE_SUPER_ADMIN: ROLE_ADMIN
+        ROLE_USER: ~
+        ROLE_ADMIN:
+            - ROLE_USER
+
+    providers:
+        passwordless:
+            id: login_provider
 
     firewalls:
         main:
             pattern: ^/
             form_login:
-                provider: fos_userbundle
+                provider: passwordless
                 csrf_token_generator: security.csrf.token_manager
-            logout: true
-            anonymous: true
+            guard:
+                authenticators:
+                    - link_authenticator
+            logout:       true
+            anonymous:    true
+            remember_me:
+                secret: '%secret%'
+                lifetime: 9072500 # 15 weeks in seconds
+                path: /
+                always_remember_me: true
 
     access_control:
         - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }

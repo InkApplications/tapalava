@@ -16,7 +16,6 @@ class AppKernel extends Kernel
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new Tapalava\ScheduleBundle\ScheduleBundle(),
-            new FOS\UserBundle\FOSUserBundle(),
             new Tapalava\AuthenticationBundle\AuthenticationBundle(),
             new JMS\AopBundle\JMSAopBundle(),
             new JMS\SecurityExtraBundle\JMSSecurityExtraBundle(),
