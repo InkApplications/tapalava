@@ -45,4 +45,32 @@ class ScheduleControllerTest extends WebTestCase
         $client->request('GET', '/schedule/missing-id');
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
     }
+
+    /**
+     * Schedule's create page should return successfully
+     *
+     * @test
+     * @group functional
+     */
+    public function scheduleCreate()
+    {
+        $client = static::createClient();
+
+        $client->request('GET', '/schedule/create.html');
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+    }
+
+    /**
+     * Creating a schedule should result in a redirect to the created schedule.
+     *
+     * @test
+     * @group functional
+     */
+    public function scheduleCreateSubmit()
+    {
+        $client = static::createClient();
+
+        $client->request('POST', '/schedule/create.html');
+        $this->assertEquals(302, $client->getResponse()->getStatusCode());
+    }
 }

@@ -4,6 +4,7 @@ namespace Tapalava\ScheduleBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
@@ -35,6 +36,31 @@ class ScheduleController extends Controller
     public function __construct(ScheduleRepository $scheduleRepository)
     {
         $this->scheduleRepository = $scheduleRepository;
+    }
+
+    /**
+     * Create a new schedule page
+     *
+     * @Template
+     * @Route("/create.{_format}", methods={"GET"}, name="schedule-create", defaults={"_format" = "html"})
+     */
+    public function createAction()
+    {
+        return [];
+    }
+
+    /**
+     * Create a new schedule page
+     *
+     * @Template
+     * @Route("/create.{_format}", methods={"POST"}, name="schedule-create-submit", defaults={"_format" = "html"})
+     */
+    public function createSubmitAction($_format)
+    {
+        return $this->redirectToRoute(
+            'schedule-read',
+            ['id' => 'fake-id-001', '_format' => $_format]
+        );
     }
 
     /**

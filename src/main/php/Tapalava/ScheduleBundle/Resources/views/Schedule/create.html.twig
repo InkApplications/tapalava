@@ -1,0 +1,41 @@
+{% extends '::default.html.twig' %}
+
+{% block content %}
+    <div class="container">
+        <section>
+            <h1>New Schedule</h1>
+            <form method="post" action="{{ url('schedule-create-submit') }}">
+                <fieldset>
+                    <h2>About Your Event</h2>
+                    <label for="name">Name</label>
+                    <input name="name" id="name" type="text" placeholder="PizzaFest 2042" />
+
+                    <label for="startRange">Start Day</label>
+                    <input name="startRange" id="startRange" type="date">
+
+                    <label for="startRange">End Day</label>
+                    <input name="endRange" id="endRange" type="date">
+
+                    <label for="location">Location</label>
+                    <input name="location" id="location" type="text" placeholder="Minneapolis, MN">
+
+                    <label for="description">Description</label>
+                    <textarea
+                        name="description"
+                        id="description"
+                        placeholder="A place to gather and eat all the pizza."
+                    ></textarea>
+                </fieldset>
+                <fieldset>
+                    <h2>Extra information</h2>
+                    <label for="banner">Banner</label>
+                    <input name="banner" id="banner" type="text" placeholder="http://example.com/wow.jpg">
+
+                    <label for="tags">Tags</label>
+                    <input name="tags" id="tags" type="text" placeholder="Pizza, Fun">
+                </fieldset>
+                <button type="submit">Create</button>
+            </form>
+        </section>
+    </div>
+{% endblock %}
