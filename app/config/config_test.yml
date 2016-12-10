@@ -14,3 +14,8 @@ web_profiler:
 
 swiftmailer:
     disable_delivery: true
+
+# Override services we don't want tested in Functional tests
+services:
+    schedule.repository:
+        class: Tapalava\Schedule\FakeScheduleRepository

@@ -1,6 +1,12 @@
 services:
     schedule.repository:
-        class: Tapalava\Schedule\FakeScheduleRepository
+        class: Tapalava\Schedule\CassandraScheduleRepository
+        arguments:
+            - '@m6web_cassandra.client.schedule'
+            - '@schedule.date_transformer'
+
+    schedule.date_transformer:
+        class: Tapalava\Schedule\DateCollectionTransformer
 
     event.repository:
         class: Tapalava\Event\FakeEventRepository
@@ -9,3 +15,17 @@ services:
         class: Tapalava\ScheduleBundle\Response\FormatContentType
         tags:
             - { name: kernel.event_listener, event: kernel.response, method: onResponse }
+
+    schedule.command.install:
+        class: Tapalava\ScheduleBundle\Command\DatabaseInstallCommand
+        properties:
+            client: "@m6web_cassandra.client.schedule"
+        tags:
+            - { name: console.command }
+
+    schedule.command.drop:
+        class: Tapalava\ScheduleBundle\Command\DatabaseDropCommand
+        properties:
+            client: "@m6web_cassandra.client.schedule"
+        tags:
+            - { name: console.command }

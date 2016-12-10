@@ -16,3 +16,4 @@
 /web/css/
 /web/javascript/
 node_modules
+cassandra.log

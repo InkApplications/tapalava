@@ -45,17 +45,23 @@ class Schedule
     private $tags = [];
 
     /**
-     * Schedule constructor.
-     * @param string $id
-     * @param string $name
-     * @param string $description
-     * @param string $banner
-     * @param array $days
-     * @param string $location
-     * @param array $tags
+     * @param string|null $id A UUID For this object.
+     * @param string|null $name The name of the large-event that this schedule is for.
+     * @param string|null $description A User provided description of what the large-event is. (optional)
+     * @param string|null $banner A URI to an image that can be used to represent this event. (optional)
+     * @param array $days A list of dates that this event occurs on.
+     * @param string|null $location An address for the location, if applicable. (optional)
+     * @param array $tags A list of meta-data descriptions for the schedule.
      */
-    public function __construct($id = null, $name = null, array $days = null, $description = null, $banner = null, $location = null, array $tags = null)
-    {
+    public function __construct(
+        $id = null,
+        $name = null,
+        array $days = null,
+        $description = null,
+        $banner = null,
+        $location = null,
+        array $tags = null
+    ) {
         $this->id = $id;
         $this->name = $name;
         $this->description = $description;
@@ -66,7 +72,7 @@ class Schedule
     }
 
     /**
-     * @return string
+     * @return string|null A UUID For this object.
      */
     public function getId()
     {
@@ -74,7 +80,7 @@ class Schedule
     }
 
     /**
-     * @return string
+     * @return string|null The name of the large-event that this schedule is for.
      */
     public function getName()
     {
@@ -82,7 +88,7 @@ class Schedule
     }
 
     /**
-     * @return string
+     * @return string|null A User provided description of what the large-event is. (optional)
      */
     public function getDescription()
     {
@@ -90,7 +96,7 @@ class Schedule
     }
 
     /**
-     * @return string
+     * @return string|null A URI to an image that can be used to represent this event. (optional)
      */
     public function getBanner()
     {
@@ -98,15 +104,15 @@ class Schedule
     }
 
     /**
-     * @return array<DateTime>
+     * @return array<DateTime> A list of dates that this event occurs on.
      */
-    public function getDays()
+    public function getDays(): array
     {
         return $this->days;
     }
 
     /**
-     * @return string
+     * @return string|null $location An address for the location, if applicable. (optional)
      */
     public function getLocation()
     {
@@ -114,9 +120,9 @@ class Schedule
     }
 
     /**
-     * @return array<string>
+     * @return array<string> A list of meta-data descriptions for the schedule.
      */
-    public function getTags()
+    public function getTags(): array
     {
         return $this->tags;
     }
