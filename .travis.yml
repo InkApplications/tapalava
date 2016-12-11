@@ -1,0 +1,29 @@
+language: php
+services:
+    - cassandra
+compiler:
+    - clang
+    - gcc
+matrix:
+    include:
+      - php: 7.0
+        env: deps=high
+    fast_finish: true
+
+before_install:
+    - sudo apt-add-repository -y ppa:linuxjedi/ppa
+    - sudo apt-key update && sudo apt-get update
+    - sudo apt-get install -y libuv-dev libssl-dev
+    - git clone https://github.com/datastax/php-driver.git
+    - cd php-driver
+    - git submodule update --init
+    - cd ext
+    - ./install.sh
+    - cd "$TRAVIS_BUILD_DIR"
+    - echo "extension=cassandra.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
+
+install:
+    - ./composer install
+
+script:
+    - vendor/php/bin/phpunit
