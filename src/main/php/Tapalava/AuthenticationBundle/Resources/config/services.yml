@@ -1,6 +1,8 @@
 services:
     user.repository:
-        class: Tapalava\User\FakeUserRepository
+        class: Tapalava\User\CassandraUserRepository
+        arguments:
+            - '@m6web_cassandra.client.user'
 
     link_authenticator:
         class: InkApplications\Knock\LinkAuthenticator
@@ -22,5 +24,19 @@ services:
             - "@security.password_encoder"
             - "@login_sender"
 
-    login_provider:
+    user.command.install:
+        class: Tapalava\AuthenticationBundle\Command\DatabaseInstallCommand
+        properties:
+            client: "@m6web_cassandra.client.user"
+        tags:
+            - { name: console.command }
+
+    user.command.drop:
+        class: Tapalava\AuthenticationBundle\Command\DatabaseDropCommand
+        properties:
+            client: "@m6web_cassandra.client.user"
+        tags:
+            - { name: console.command }
+
+    user.fake_provider:
         class: Tapalava\User\FakeUserProvider

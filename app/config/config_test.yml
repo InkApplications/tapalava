@@ -16,6 +16,12 @@ swiftmailer:
     disable_delivery: true
 
 # Override services we don't want tested in Functional tests
+security:
+    providers:
+        passwordless:
+            id: user.fake_provider
 services:
     schedule.repository:
         class: Tapalava\Schedule\FakeScheduleRepository
+    user.repository:
+        class: Tapalava\User\FakeUserRepository

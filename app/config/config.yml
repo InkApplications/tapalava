@@ -62,3 +62,7 @@ m6web_cassandra:
             keyspace: "tapalava"
             contact_endpoints:
                 - 127.0.0.1
+        user:
+            keyspace: "tapalava"
+            contact_endpoints:
+                - 127.0.0.1

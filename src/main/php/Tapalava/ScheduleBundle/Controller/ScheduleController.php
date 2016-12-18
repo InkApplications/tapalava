@@ -12,6 +12,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
+use Tapalava\Schedule\Schedule;
 use Tapalava\Schedule\ScheduleNotFoundException;
 use Tapalava\Schedule\ScheduleRepository;
 
