@@ -45,8 +45,7 @@ class User implements TemporaryPasswordUser
         $password = null,
         $salt = null,
         DateTime $passwordCreated = null
-    )
-    {
+    ) {
         $this->id = $id;
         $this->email = $email;
         $this->roles = $roles;
@@ -113,5 +112,8 @@ class User implements TemporaryPasswordUser
 
     public function eraseCredentials()
     {
+        $this->password = null;
+        $this->salt = null;
+        $this->passwordCreated = null;
     }
 }

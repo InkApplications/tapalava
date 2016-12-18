@@ -9,7 +9,7 @@ security:
 
     providers:
         passwordless:
-            id: login_provider
+            id: user.repository
 
     firewalls:
         main:

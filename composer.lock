@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "7a291edeb340be73ff782ddb0e1072fc",
-    "content-hash": "72401861ad48e17843bdbfc55b1437ba",
+    "hash": "c6d0e8e91c3cb7030606061ae94f863f",
+    "content-hash": "78d56e7702f82547cf4807e6d2f4b2f7",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -783,7 +783,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfSymfony/FOSUserBundle/zipball/28151dcb25de663c05ce26917fd6a0b5cb2787cf",
+                "url": "https://api.github.com/repos/FriendsOfSymfony/FOSUserBundle/zipball/7271c175c942888c2172716a76e6e3e68d2b92bc",
                 "reference": "7271c175c942888c2172716a76e6e3e68d2b92bc",
                 "shasum": ""
             },
@@ -903,16 +903,16 @@
         },
         {
             "name": "inkapplications/knock",
-            "version": "v0.0.1",
+            "version": "v0.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/InkApplications/Knock.git",
-                "reference": "cd4ba2dbffdffb6d5fec0bd43be3a34c1ce67714"
+                "reference": "d36f42cfc5cb3b9ae3afc22d47173953a53096fd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/InkApplications/Knock/zipball/cd4ba2dbffdffb6d5fec0bd43be3a34c1ce67714",
-                "reference": "cd4ba2dbffdffb6d5fec0bd43be3a34c1ce67714",
+                "url": "https://api.github.com/repos/InkApplications/Knock/zipball/d36f42cfc5cb3b9ae3afc22d47173953a53096fd",
+                "reference": "d36f42cfc5cb3b9ae3afc22d47173953a53096fd",
                 "shasum": ""
             },
             "require": {
@@ -937,7 +937,7 @@
                 }
             ],
             "description": "Symfony security authentication through email.",
-            "time": "2016-09-18 03:37:51"
+            "time": "2016-12-11 15:34:16"
         },
         {
             "name": "jdorn/sql-formatter",

@@ -18,7 +18,6 @@ use Symfony\Component\Routing\Exception\ResourceNotFoundException;
  * Handles actions for Logging the user into the system.
  *
  * @author Maxwell Vandervelde <Max@MaxVandervelde.com>
- * @Route("/login")
  */
 class LoginController extends Controller
 {
@@ -40,7 +39,7 @@ class LoginController extends Controller
      * Starting login form where the user provides their email address for
      * logging in.
      *
-     * @Route("/", name="login-start")
+     * @Route("/login", name="login-start")
      * @Method("GET")
      * @Template
      */
@@ -52,26 +51,33 @@ class LoginController extends Controller
     /**
      * Invoked when the user submits their email to login.
      *
-     * @Route("/send-code", name="login-send-code")
+     * @Route("/login/send-code", name="login-send-code")
      * @Method("POST")
      * @Template
      */
     public function sendCodeAction(Request $request)
     {
         $email = $request->get('email');
-        $this->login->start($email);
+        $this->login->start($email, true);
 
         return [];
     }
 
     /**
-     * Route for when the user clicks the email login link.
+     * Useless action for intercepted routes.
      *
-     * This route will never be invoked, as it is intercepted by the Security
-     * Handlers. It just exists for routing.
+     * This is used for routes that will never be invoked, as it is intercepted
+     * by the Security handlers. It just exists for routing.
+     *
+     * Contains the route for when the user clicks the email login link and the
+     * logout link – both are intercepted by the security listeners.
+     *
+     * (These could also go in the routing.yml file, but keep them here so they
+     * are grouped with the others.)
      *
      * @Route("/authorize", name="login-authorize")
+     * @Route("/logout")
      * @Method("GET")
      */
-    public function authorizeLoginAction() {}
+    public function noop() {}
 }
