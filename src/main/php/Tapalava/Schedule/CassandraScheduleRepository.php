@@ -80,7 +80,9 @@ class CassandraScheduleRepository implements ScheduleRepository
         $id = $schedule->getId() ?: (new Uuid())->uuid();
         $days = $this->dateCollectionTransformer->toCollection($schedule->getDays());
         $tags = new Collection(Cassandra::TYPE_VARCHAR);
-        $tags->add(...$schedule->getTags());
+        if (0 !== count($schedule->getTags())) {
+            $tags->add(...$schedule->getTags());
+        }
 
         $statement = new SimpleStatement('
             INSERT INTO schedule (

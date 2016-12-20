@@ -33,7 +33,7 @@ interface ScheduleRepository
      * Save a Schedule into persistence.
      *
      * @param Schedule $schedule The full Schedule object to be persisted.
-     * @return void
+     * @return string The ID of the schedule that was created or saved.
      */
     public function save(Schedule $schedule);
 }
