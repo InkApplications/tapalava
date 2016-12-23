@@ -39,5 +39,8 @@ class FakeScheduleRepository implements ScheduleRepository
         return $this->fakeSchedules;
     }
 
-    public function save(Schedule $schedule) {}
+    public function save(Schedule $schedule)
+    {
+        return $schedule->getId() ?: 'fake-generated-id';
+    }
 }

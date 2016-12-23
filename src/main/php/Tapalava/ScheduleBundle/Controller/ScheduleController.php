@@ -5,6 +5,7 @@ namespace Tapalava\ScheduleBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
@@ -12,7 +13,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
+use Tapalava\Http\RequestParser;
 use Tapalava\Schedule\Schedule;
+use Tapalava\Schedule\ScheduleFormTransformer;
 use Tapalava\Schedule\ScheduleNotFoundException;
 use Tapalava\Schedule\ScheduleRepository;
 
@@ -30,17 +33,32 @@ class ScheduleController extends Controller
     private $scheduleRepository;
 
     /**
+     * @var ScheduleFormTransformer for converting to/from view and form data.
+     */
+    private $formTransformer;
+
+    /** @var RequestParser Used for extracting view data from HTTP Reqeusts. */
+    private $requestParser;
+
+    /**
      * @InjectParams({
-     *     "scheduleRepository" = @Inject("schedule.repository")
+     *     "scheduleRepository" = @Inject("schedule.repository"),
+     *     "formTransformer" = @Inject("schedule.form_transformer"),
+     *     "requestParser" = @Inject("http.request_parser"),
      * })
      */
-    public function __construct(ScheduleRepository $scheduleRepository)
-    {
+    public function __construct(
+        ScheduleRepository $scheduleRepository,
+        ScheduleFormTransformer $formTransformer,
+        RequestParser $requestParser
+    ) {
         $this->scheduleRepository = $scheduleRepository;
+        $this->formTransformer = $formTransformer;
+        $this->requestParser = $requestParser;
     }
 
     /**
-     * Create a new schedule page
+     * Editor page for creating a new schedule entity.
      *
      * @Template
      * @Route("/create.{_format}", methods={"GET"}, name="schedule-create", defaults={"_format" = "html"})
@@ -51,16 +69,20 @@ class ScheduleController extends Controller
     }
 
     /**
-     * Create a new schedule page
+     * Receive a request for creating a new schedule entity.
      *
      * @Template
      * @Route("/create.{_format}", methods={"POST"}, name="schedule-create-submit", defaults={"_format" = "html"})
      */
-    public function createSubmitAction($_format)
+    public function createSubmitAction($_format, Request $request)
     {
+        $data = $this->requestParser->getEntityFromPost($request, 'schedule');
+        $schedule = $this->formTransformer->fromView($data);
+        $id = $this->scheduleRepository->save($schedule);
+
         return $this->redirectToRoute(
             'schedule-read',
-            ['id' => 'fake-id-001', '_format' => $_format]
+            ['id' => $id, '_format' => $_format]
         );
     }
 

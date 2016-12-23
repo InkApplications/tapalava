@@ -70,7 +70,7 @@ class ScheduleControllerTest extends WebTestCase
     {
         $client = static::createClient();
 
-        $client->request('POST', '/schedule/create.html');
+        $client->request('POST', '/schedule/create.json', [], [], [], '{"schedule": {}}');
         $this->assertEquals(302, $client->getResponse()->getStatusCode());
     }
 }

@@ -5,8 +5,14 @@ services:
             - '@m6web_cassandra.client.schedule'
             - '@schedule.date_transformer'
 
+    schedule.form_transformer:
+        class: Tapalava\Schedule\ScheduleFormTransformer
+
     schedule.date_transformer:
         class: Tapalava\Schedule\DateCollectionTransformer
+
+    http.request_parser:
+        class: Tapalava\Http\RequestParser
 
     event.repository:
         class: Tapalava\Event\FakeEventRepository

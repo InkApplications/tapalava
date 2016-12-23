@@ -246,4 +246,51 @@ class CassandraScheduleRepositoryTest extends TestCase
 
         $this->assertEquals('fake-id-001', $result);
     }
+
+    /**
+     * Repository has the ability to save an empty model without error and will
+     * generate an ID for it.
+     *
+     * @test
+     */
+    public function saveEmpty()
+    {
+        $spyClient = new class($this) extends Client {
+            private $test;
+            public function __construct(TestCase $test) { $this->test = $test; }
+
+            public function execute(Statement $statement, ExecutionOptions $options = null) {
+
+                $arguments = $options->arguments;
+                $this->test->assertNotNull($arguments['id']);
+                $this->test->assertNull($arguments['name']);
+                $this->test->assertInstanceOf(Collection::class, $arguments['days']);
+                $this->test->assertEquals(0, $arguments['days']->count());
+                $this->test->assertNull($arguments['description']);
+                $this->test->assertNull($arguments['banner']);
+                $this->test->assertNull($arguments['location']);
+                $this->test->assertInstanceOf(Collection::class, $arguments['tags']);
+                $this->test->assertEquals(0 , $arguments['tags']->count());
+
+                return [];
+            }
+        };
+        $stubTransformer = new class extends DateCollectionTransformer {
+            public function toArray(Collection $collection = null) {
+                return [];
+            }
+            public function toCollection(array $dates = null) {
+                $dates = new Collection(Cassandra::TYPE_VARCHAR);
+
+                return $dates;
+            }
+        };
+        $repository = new CassandraScheduleRepository($spyClient, $stubTransformer);
+
+        $data = new Schedule();
+
+        $result = $repository->save($data);
+
+        $this->assertNotNull($result);
+    }
 }
