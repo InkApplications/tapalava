@@ -27,3 +27,6 @@ install:
 
 script:
     - vendor/php/bin/phpunit
+
+after_script:
+    - vendor/php/bin/coveralls -v
