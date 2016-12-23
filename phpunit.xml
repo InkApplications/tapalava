@@ -7,11 +7,18 @@
          colors="true"
          bootstrap="app/autoload.php"
 >
+    <logging>
+        <log type="coverage-clover" target="build/logs/clover.xml"/>
+    </logging>
     <php>
         <ini name="error_reporting" value="-1" />
         <server name="KERNEL_DIR" value="app/" />
     </php>
-
+    <filter>
+        <whitelist>
+            <directory>src/main/php</directory>
+        </whitelist>
+    </filter>
     <testsuites>
         <testsuite name="Project Test Suite">
             <directory>src/test/php</directory>
