@@ -42,7 +42,7 @@ class EventTest extends TestCase
         $this->assertEquals('tag-a', $test->getTags()[0]);
         $this->assertEquals('tag-b', $test->getTags()[1]);
         $this->assertEquals('fake description', $test->getDescription());
-        $this->assertEquals('fake scrim uri', $test->getScrim());
+        $this->assertEquals('fake scrim uri', $test->getBanner());
     }
 
     /**
@@ -61,7 +61,7 @@ class EventTest extends TestCase
         $this->assertNull($test->getEnd());
         $this->assertNull($test->getCategory());
         $this->assertNull($test->getDescription());
-        $this->assertNull($test->getScrim());
+        $this->assertNull($test->getBanner());
         $this->assertNull($test->getRoom());
 
         $this->assertNotNull($test->getTags());

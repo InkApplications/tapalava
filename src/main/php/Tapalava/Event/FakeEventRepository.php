@@ -22,7 +22,7 @@ class FakeEventRepository implements EventRepository
         $this->fakeEvents = [$full, $minimal];
     }
 
-    public function find($id) : Event
+    public function find($id): Event
     {
         switch ($id) {
             case 'fake-event-id-001':
@@ -34,7 +34,7 @@ class FakeEventRepository implements EventRepository
         }
     }
 
-    public function findAll($scheduleId) : array
+    public function findAll($scheduleId): array
     {
         if ('fake-id-001' === $scheduleId) {
             return $this->fakeEvents;
@@ -42,14 +42,8 @@ class FakeEventRepository implements EventRepository
 
         throw new ScheduleNotFoundException($scheduleId);
     }
-
-    public function create(Event $event) : Event
+    public function save(Event $event)
     {
-        return $event;
-    }
-
-    public function update(Event $event) : Event
-    {
-        return $event;
+        return $event->getId() ?? 'fake-generated-id';
     }
 }

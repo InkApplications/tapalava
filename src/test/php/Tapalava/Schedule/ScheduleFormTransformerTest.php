@@ -62,7 +62,7 @@ class ScheduleFormTransformerTest extends TestCase
         $test = new ScheduleFormTransformer();
 
         $newModel = $test->fromView($viewData);
-        $newView = $test->toView($model);
+        $newView = $test->toView($newModel);
 
         $this->assertEquals($model->getId(), $newModel->getId());
         $this->assertEquals($model->getName(), $newModel->getName());
