@@ -16,7 +16,7 @@ interface EventRepository
      * @return Event The Event matching the ID provided.
      * @throws EventNotFoundException If the event ID doesn't exist.
      */
-    public function find($id) : Event;
+    public function find($id): Event;
 
     /**
      * Find all events associated with a specified schedule.
@@ -25,24 +25,13 @@ interface EventRepository
      * @return array The events associated with the provided schedule ID. Empty
      *               if none found, never null.
      */
-    public function findAll($scheduleId) : array;
+    public function findAll($scheduleId): array;
 
     /**
      * Persist a new Event to application storage.
      *
-     * @param Event $event the new event to create in the data storage.
-     * @return Event The persisted event with updated information that may have
-     *               been changed by the data storage, such as an
-     *               auto-generated ID.
+     * @param Event $event the new event to update in the data storage.
+     * @return Event The ID of the event saved (this will be generated if new)
      */
-    public function create(Event $event) : Event;
-
-    /**
-     * Persist updated information to an existing Event in application storage.
-     *
-     * @param Event $event the event to update in the data storage.
-     * @return Event The persisted event with updated information that may have
-     *               been changed by the data storage, such as a timestamp.
-     */
-    public function update(Event $event) : Event;
+    public function save(Event $event);
 }

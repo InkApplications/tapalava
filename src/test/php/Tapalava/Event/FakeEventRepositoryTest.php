@@ -3,6 +3,7 @@
 namespace Tapalava\Event;
 
 use PHPUnit_Framework_TestCase as TestCase;
+use Symfony\Component\Validator\Constraints\DateTime;
 
 class FakeEventRepositoryTest extends TestCase
 {
@@ -45,6 +46,22 @@ class FakeEventRepositoryTest extends TestCase
         $test = $repository->findAll('fake-id-001');
 
         $this->assertNotEmpty($test);
+    }
+
+    /**
+     * Entities can be saved without error
+     *
+     * @test
+     */
+    public function save()
+    {
+        $repository = new FakeEventRepository();
+
+        $test = $repository->save(new Event('fake-id', 'fake-schedule-id', 'fake name', new DateTime(), new DateTime(), 'fake category', ['a', 'b'], 'fake room', ['john'], 'fake description', 'fake banner'));
+        $testEmpty = $repository->save(new Event());
+
+        $this->assertNotEmpty($test);
+        $this->assertNotEmpty($testEmpty);
     }
 
     /**

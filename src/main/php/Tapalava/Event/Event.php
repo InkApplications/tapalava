@@ -42,7 +42,7 @@ class Event
     private $description;
 
     /** @var null|string A background banner image to use as a backdrop. */
-    private $scrim;
+    private $banner;
 
     /**
      * @param null $id UUID for this object.
@@ -55,7 +55,7 @@ class Event
      * @param null $room What room the event is held in.
      * @param array|null $hosts Who is speaking or facilitating at the event.
      * @param null $description A user-defined description of the event.
-     * @param null $scrim A background banner image to use as a backdrop.
+     * @param null $banner A background banner image to use as a backdrop.
      */
     public function __construct(
         $id = null,
@@ -68,7 +68,7 @@ class Event
         $room = null,
         array $hosts = null,
         $description = null,
-        $scrim = null
+        $banner = null
     ) {
         $this->id = $id;
         $this->scheduleId = $scheduleId;
@@ -80,7 +80,7 @@ class Event
         $this->room = $room;
         $this->hosts = $hosts ?: [];
         $this->description = $description;
-        $this->scrim = $scrim;
+        $this->banner = $banner;
     }
 
     /**
@@ -168,8 +168,8 @@ class Event
     /**
      * @return null|string A background banner image to use as a backdrop.
      */
-    public function getScrim()
+    public function getBanner()
     {
-        return $this->scrim;
+        return $this->banner;
     }
 }

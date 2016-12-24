@@ -17,6 +17,9 @@ services:
     event.repository:
         class: Tapalava\Event\FakeEventRepository
 
+    event.form_transformer:
+        class: Tapalava\Event\EventFormTransformer
+
     format_content_type:
         class: Tapalava\ScheduleBundle\Response\FormatContentType
         tags:

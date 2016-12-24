@@ -1,0 +1,47 @@
+{% extends '::default.html.twig' %}
+
+{% block content %}
+    <div class="container">
+        <section>
+            <h1>New Event for {{ schedule.name }}</h1>
+            <form method="post" action="{{ url('event-create-submit', {"schedule": schedule.id}) }}">
+                <fieldset>
+                    <h2>About Your Event</h2>
+                    <label for="name">Event Name</label>
+                    <input name="event[name]" id="name" type="text" placeholder="Pizza eating 101" />
+
+                    <label for="startRange">Start Day</label>
+                    <input name="event[startDate]" id="startRange" type="datetime-local">
+
+                    <label for="endRange">End Day</label>
+                    <input name="event[endDate]" id="endRange" type="datetime-local">
+
+                    <label for="category">Category</label>
+                    <input name="event[category]" id="category" type="text" placeholder="Tutorials">
+
+                    <label for="category">Hosts</label>
+                    <input name="event[hosts]" id="hosts" type="text" placeholder="John Doe, Jane Doe">
+
+                    <label for="room">Room / Location</label>
+                    <input name="event[room]" id="room" type="text" placeholder="Main Stage">
+
+                    <label for="description">Description</label>
+                    <textarea
+                        name="event[description]"
+                        id="description"
+                        placeholder="Learn how to eat pizza the right way."
+                    ></textarea>
+                </fieldset>
+                <fieldset>
+                    <h2>Extra information</h2>
+                    <label for="banner">Banner</label>
+                    <input name="event[banner]" id="banner" type="text" placeholder="http://example.com/wow.jpg">
+
+                    <label for="tags">Tags</label>
+                    <input name="event[tags]" id="tags" type="text" placeholder="Pizza, Fun">
+                </fieldset>
+                <button type="submit">Create</button>
+            </form>
+        </section>
+    </div>
+{% endblock %}
