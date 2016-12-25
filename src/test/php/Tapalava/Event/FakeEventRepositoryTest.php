@@ -2,8 +2,8 @@
 
 namespace Tapalava\Event;
 
+use DateTime;
 use PHPUnit_Framework_TestCase as TestCase;
-use Symfony\Component\Validator\Constraints\DateTime;
 
 class FakeEventRepositoryTest extends TestCase
 {

@@ -70,7 +70,7 @@ class User implements TemporaryPasswordUser
         return $this->email;
     }
 
-    public function getRoles() : array
+    public function getRoles(): array
     {
         return $this->roles;
     }

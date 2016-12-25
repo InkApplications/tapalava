@@ -45,24 +45,24 @@ class Event
     private $banner;
 
     /**
-     * @param null $id UUID for this object.
-     * @param null $scheduleId A UUID for the schedule that this event takes place in.
-     * @param null $name User-defined name for the event.
-     * @param null $start When the event starts.
-     * @param null $end When the event ends.
-     * @param null $category A main category to group this event with.
+     * @param string|null $id UUID for this object.
+     * @param string|null $scheduleId A UUID for the schedule that this event takes place in.
+     * @param string|null $name User-defined name for the event.
+     * @param DateTime|null $start When the event starts.
+     * @param DateTime|null $end When the event ends.
+     * @param string|null $category A main category to group this event with.
      * @param array|null $tags Misc. user-defined metadata for the event.
-     * @param null $room What room the event is held in.
+     * @param string|null $room What room the event is held in.
      * @param array|null $hosts Who is speaking or facilitating at the event.
-     * @param null $description A user-defined description of the event.
-     * @param null $banner A background banner image to use as a backdrop.
+     * @param string|null $description A user-defined description of the event.
+     * @param string|null $banner A background banner image to use as a backdrop.
      */
     public function __construct(
         $id = null,
         $scheduleId = null,
         $name = null,
-        $start = null,
-        $end = null,
+        DateTime $start = null,
+        DateTime $end = null,
         $category = null,
         array $tags = null,
         $room = null,
@@ -110,7 +110,7 @@ class Event
     /**
      * @return DateTime|null When the event starts.
      */
-    public function getStart()
+    public function getStart(): ?DateTime
     {
         return $this->start;
     }
@@ -118,7 +118,7 @@ class Event
     /**
      * @return DateTime|null When the event ends.
      */
-    public function getEnd()
+    public function getEnd(): ?DateTime
     {
         return $this->end;
     }
@@ -135,7 +135,7 @@ class Event
      * @return array Misc. user-defined metadata for the event. Empty if
      *               none defined, never null.
      */
-    public function getTags() : array
+    public function getTags(): array
     {
         return $this->tags;
     }
@@ -152,7 +152,7 @@ class Event
      * @return array Who is speaking or facilitating at the event. Empty if
      *               none defined, never null.
      */
-    public function getHosts() : array
+    public function getHosts(): array
     {
         return $this->hosts;
     }

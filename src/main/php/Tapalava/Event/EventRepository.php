@@ -31,7 +31,7 @@ interface EventRepository
      * Persist a new Event to application storage.
      *
      * @param Event $event the new event to update in the data storage.
-     * @return Event The ID of the event saved (this will be generated if new)
+     * @return string The ID of the event saved (this will be generated if new)
      */
     public function save(Event $event);
 }
