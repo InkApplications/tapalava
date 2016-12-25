@@ -11,7 +11,7 @@
         "psr-4": { "Tests\\": "src/test/php/" }
     },
     "require": {
-        "php": ">=5.5.9",
+        "php": ">=7.1.0",
         "symfony/symfony": "3.0.*",
         "doctrine/orm": "^2.5",
         "doctrine/doctrine-bundle": "^1.6",
@@ -54,7 +54,7 @@
     },
     "config": {
         "platform": {
-            "php": "5.5.9"
+            "php": "7.1.0"
         },
         "vendor-dir": "vendor/php"
     },
