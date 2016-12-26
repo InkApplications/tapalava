@@ -2,7 +2,7 @@ services:
     user.repository:
         class: Tapalava\User\CassandraUserRepository
         arguments:
-            - '@m6web_cassandra.client.user'
+            - '@m6web_cassandra.client.tapalava'
 
     link_authenticator:
         class: InkApplications\Knock\LinkAuthenticator
@@ -27,14 +27,14 @@ services:
     user.command.install:
         class: Tapalava\AuthenticationBundle\Command\DatabaseInstallCommand
         properties:
-            client: "@m6web_cassandra.client.user"
+            client: "@m6web_cassandra.client.tapalava"
         tags:
             - { name: console.command }
 
     user.command.drop:
         class: Tapalava\AuthenticationBundle\Command\DatabaseDropCommand
         properties:
-            client: "@m6web_cassandra.client.user"
+            client: "@m6web_cassandra.client.tapalava"
         tags:
             - { name: console.command }
 

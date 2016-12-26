@@ -58,11 +58,7 @@ jms_di_extra:
 
 m6web_cassandra:
     clients:
-        schedule:
-            keyspace: "tapalava"
-            contact_endpoints:
-                - 127.0.0.1
-        user:
+        tapalava:
             keyspace: "tapalava"
             contact_endpoints:
                 - 127.0.0.1

@@ -17,7 +17,6 @@ class DatabaseDropCommand extends Command
 {
     /**
      * @var Client For accessing schedule data.
-     * @Inject("m6web_cassandra.client.schedule")
      */
     public $client;
 

@@ -2,7 +2,7 @@ services:
     schedule.repository:
         class: Tapalava\Schedule\CassandraScheduleRepository
         arguments:
-            - '@m6web_cassandra.client.schedule'
+            - '@m6web_cassandra.client.tapalava'
             - '@schedule.date_transformer'
 
     schedule.form_transformer:
@@ -28,13 +28,13 @@ services:
     schedule.command.install:
         class: Tapalava\ScheduleBundle\Command\DatabaseInstallCommand
         properties:
-            client: "@m6web_cassandra.client.schedule"
+            client: "@m6web_cassandra.client.tapalava"
         tags:
             - { name: console.command }
 
     schedule.command.drop:
         class: Tapalava\ScheduleBundle\Command\DatabaseDropCommand
         properties:
-            client: "@m6web_cassandra.client.schedule"
+            client: "@m6web_cassandra.client.tapalava"
         tags:
             - { name: console.command }
