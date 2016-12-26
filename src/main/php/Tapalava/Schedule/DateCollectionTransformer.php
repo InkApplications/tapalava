@@ -20,7 +20,7 @@ class DateCollectionTransformer
      * @return Collection|null A cassandra collection matching the provided
      *                         array, in order. Null if the array was also null.
      */
-    public function toCollection(array $dates = null)
+    public function toCollection(array $dates = null): ?Collection
     {
         if (null === $dates) {
             return null;
@@ -43,7 +43,7 @@ class DateCollectionTransformer
      *                    collection, in order. Null if the collection provided
      *                    was also null.
      */
-    public function toArray(Collection $collection = null)
+    public function toArray(Collection $collection = null): ?array
     {
         if (null === $collection) {
             return null;

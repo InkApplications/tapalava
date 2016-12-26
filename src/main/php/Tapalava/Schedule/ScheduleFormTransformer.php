@@ -87,7 +87,7 @@ class ScheduleFormTransformer
      */
     protected function dateTransform($startDate = null, $endDate = null)
     {
-        if (null == $startDate || null == $endDate) {
+        if (null === $startDate || null === $endDate) {
             return null;
         }
 

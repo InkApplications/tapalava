@@ -45,10 +45,10 @@ class CassandraScheduleRepositoryTest extends TestCase
             }
         };
         $stubTransformer = new class extends DateCollectionTransformer {
-            public function toArray(Collection $collection = null) {
+            public function toArray(Collection $collection = null): ?array {
                 return [new DateTime('2016-04-01'), new DateTime('2016-04-02')];
             }
-            public function toCollection(array $dates = null) {}
+            public function toCollection(array $dates = null): ?Collection {}
         };
         $repository = new CassandraScheduleRepository($stubClient, $stubTransformer);
 
@@ -83,8 +83,8 @@ class CassandraScheduleRepositoryTest extends TestCase
             }
         };
         $stubTransformer = new class extends DateCollectionTransformer {
-            public function toCollection(array $dates = null) {}
-            public function toArray(Collection $collection = null) {}
+            public function toCollection(array $dates = null): ?Collection {}
+            public function toArray(Collection $collection = null): ?array {}
         };
         $repository = new CassandraScheduleRepository($stubClient, $stubTransformer);
 
@@ -127,10 +127,10 @@ class CassandraScheduleRepositoryTest extends TestCase
             }
         };
         $stubTransformer = new class extends DateCollectionTransformer {
-            public function toArray(Collection $collection = null) {
+            public function toArray(Collection $collection = null): ?array {
                 return [new DateTime('2016-04-01'), new DateTime('2016-04-02')];
             }
-            public function toCollection(array $dates = null) {}
+            public function toCollection(array $dates = null): ?Collection {}
         };
         $repository = new CassandraScheduleRepository($stubClient, $stubTransformer);
 
@@ -170,10 +170,10 @@ class CassandraScheduleRepositoryTest extends TestCase
             }
         };
         $stubTransformer = new class extends DateCollectionTransformer {
-            public function toArray(Collection $collection = null) {
+            public function toArray(Collection $collection = null): ?array {
                 return [];
             }
-            public function toCollection(array $dates = null) {}
+            public function toCollection(array $dates = null): ?Collection {}
         };
         $repository = new CassandraScheduleRepository($stubClient, $stubTransformer);
 
@@ -216,10 +216,10 @@ class CassandraScheduleRepositoryTest extends TestCase
             }
         };
         $stubTransformer = new class extends DateCollectionTransformer {
-            public function toArray(Collection $collection = null) {
+            public function toArray(Collection $collection = null): ?array {
                 return [];
             }
-            public function toCollection(array $dates = null) {
+            public function toCollection(array $dates = null): ?Collection {
                 $dates = new Collection(Cassandra::TYPE_VARCHAR);
                 $dates->add('2016-12-15');
                 $dates->add('2016-12-16');
@@ -276,10 +276,10 @@ class CassandraScheduleRepositoryTest extends TestCase
             }
         };
         $stubTransformer = new class extends DateCollectionTransformer {
-            public function toArray(Collection $collection = null) {
+            public function toArray(Collection $collection = null): array {
                 return [];
             }
-            public function toCollection(array $dates = null) {
+            public function toCollection(array $dates = null): ?Collection {
                 $dates = new Collection(Cassandra::TYPE_VARCHAR);
 
                 return $dates;

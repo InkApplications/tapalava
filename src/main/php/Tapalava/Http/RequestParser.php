@@ -46,7 +46,7 @@ class RequestParser
      * @throws BadRequestHttpException If the Request contains invalid or missing data.
      * @return array Key/value data of the entity posted by the user.
      */
-    public function getEntityFromPost(Request $request, $entity)
+    public function getEntityFromPost(Request $request, $entity): array
     {
         $format = $request->getRequestFormat('html');
 
@@ -67,7 +67,7 @@ class RequestParser
      * @param string $entity The data entity to be extracted from the request.
      * @return array Key/value data of the entity posted by the user.
      */
-    private function fromHtml(Request $request, $entity)
+    private function fromHtml(Request $request, $entity): array
     {
         $data = $request->get($entity);
 
@@ -85,7 +85,7 @@ class RequestParser
      * @param string $entity The data entity to be extracted from the request.
      * @return array Key/value data of the entity posted by the user.
      */
-    private function fromJson(Request $request, $entity)
+    private function fromJson(Request $request, $entity): array
     {
         $content = $request->getContent();
         $json = json_decode($content, true);
