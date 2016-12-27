@@ -22,6 +22,7 @@ class AppKernel extends Kernel
             new Knp\Bundle\MarkdownBundle\KnpMarkdownBundle(),
             new JMS\SerializerBundle\JMSSerializerBundle(),
             new M6Web\Bundle\CassandraBundle\M6WebCassandraBundle(),
+            new Bugsnag\BugsnagBundle\BugsnagBundle(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {

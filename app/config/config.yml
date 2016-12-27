@@ -62,3 +62,6 @@ m6web_cassandra:
             keyspace: "tapalava"
             contact_endpoints:
                 - 127.0.0.1
+bugsnag:
+    api_key: "%bugsnag_key%"
+    batch_sending: true
