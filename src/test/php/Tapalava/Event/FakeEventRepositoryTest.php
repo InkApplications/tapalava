@@ -16,7 +16,7 @@ class FakeEventRepositoryTest extends TestCase
     {
         $repository = new FakeEventRepository();
 
-        $test = $repository->find('fake-event-id-001');
+        $test = $repository->find('fake-id-001', 'fake-event-id-001');
 
         $this->assertNotNull($test);
     }
@@ -31,7 +31,7 @@ class FakeEventRepositoryTest extends TestCase
     {
         $repository = new FakeEventRepository();
 
-        $repository->find('missing-id');
+        $repository->find('fake-id-001', 'missing-id');
     }
 
     /**

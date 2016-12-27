@@ -16,7 +16,7 @@ interface EventRepository
      * @return Event The Event matching the ID provided.
      * @throws EventNotFoundException If the event ID doesn't exist.
      */
-    public function find($id): Event;
+    public function find($scheduleId, $id): Event;
 
     /**
      * Find all events associated with a specified schedule.
