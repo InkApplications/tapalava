@@ -22,7 +22,7 @@ class FakeEventRepository implements EventRepository
         $this->fakeEvents = [$full, $minimal];
     }
 
-    public function find($id): Event
+    public function find($scheduleId, $id): Event
     {
         switch ($id) {
             case 'fake-event-id-001':

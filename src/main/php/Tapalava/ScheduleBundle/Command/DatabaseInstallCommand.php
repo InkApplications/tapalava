@@ -28,6 +28,8 @@ class DatabaseInstallCommand extends Command
     {
         $output->writeln('Creating Schedule Table');
         $this->createScheduleTable();
+        $output->writeln('Creating Event Table');
+        $this->createEventTable();
     }
 
     private function createScheduleTable()
@@ -43,6 +45,27 @@ class DatabaseInstallCommand extends Command
                 tags list<text>,
                 created timestamp,
                 PRIMARY KEY (id, created)
+            );
+        '));
+    }
+
+    private function createEventTable()
+    {
+        $this->client->execute(new SimpleStatement('
+            CREATE TABLE event (
+                schedule_id text,
+                id text,
+                name text,
+                start timestamp,
+                end timestamp,
+                category text,
+                tags list<text>,
+                room text,
+                hosts list<text>,
+                description text,
+                banner text,
+                created timestamp,
+                PRIMARY KEY (schedule_id, id, start)
             );
         '));
     }

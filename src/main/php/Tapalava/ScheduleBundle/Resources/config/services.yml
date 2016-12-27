@@ -15,7 +15,9 @@ services:
         class: Tapalava\Http\RequestParser
 
     event.repository:
-        class: Tapalava\Event\FakeEventRepository
+        class: Tapalava\Event\CassandraEventRepository
+        arguments:
+            - '@m6web_cassandra.client.tapalava'
 
     event.form_transformer:
         class: Tapalava\Event\EventFormTransformer

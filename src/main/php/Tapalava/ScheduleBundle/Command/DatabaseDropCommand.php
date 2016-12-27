@@ -30,12 +30,21 @@ class DatabaseDropCommand extends Command
     {
         $output->writeln('Dropping Schedule Table');
         $this->dropScheduleTable();
+        $output->writeln('Dropping Event Table');
+        $this->dropEventTable();
     }
 
     private function dropScheduleTable()
     {
         $this->client->execute(new SimpleStatement('
             DROP TABLE schedule;
+        '));
+    }
+
+    private function dropEventTable()
+    {
+        $this->client->execute(new SimpleStatement('
+            DROP TABLE event;
         '));
     }
 }
