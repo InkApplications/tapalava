@@ -1,9 +1,9 @@
 <?php
 
 namespace Tapalava\Schedule;
-use Cassandra;
 use Cassandra\ExecutionOptions;
 use Cassandra\SimpleStatement;
+use Cassandra\Type;
 use Cassandra\Uuid;
 use M6Web\Bundle\CassandraBundle\Cassandra\Client;
 use Tapalava\Cassandra\CollectionFactory;
@@ -101,7 +101,7 @@ class CassandraScheduleRepository implements ScheduleRepository
             'description' => $schedule->getDescription(),
             'banner' => $schedule->getBanner(),
             'location' => $schedule->getLocation(),
-            'tags' => CollectionFactory::fromArray(Cassandra::TYPE_VARCHAR, $schedule->getTags()),
+            'tags' => CollectionFactory::fromArray(Type::text(), $schedule->getTags()),
         ]]);
 
         $this->client->execute($statement, $options);

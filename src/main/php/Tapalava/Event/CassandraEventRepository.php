@@ -2,9 +2,9 @@
 
 namespace Tapalava\Event;
 
-use Cassandra;
 use Cassandra\ExecutionOptions;
 use Cassandra\SimpleStatement;
+use Cassandra\Type;
 use Cassandra\Uuid;
 use M6Web\Bundle\CassandraBundle\Cassandra\Client;
 use Tapalava\Cassandra\CollectionFactory;
@@ -98,9 +98,9 @@ class CassandraEventRepository implements EventRepository
             'start' => $event->getStart(),
             'end' => $event->getEnd(),
             'category' => $event->getCategory(),
-            'tags' => CollectionFactory::fromArray(Cassandra::TYPE_VARCHAR, $event->getTags()),
+            'tags' => CollectionFactory::fromArray(Type::text(), $event->getTags()),
             'room' => $event->getRoom(),
-            'hosts' => CollectionFactory::fromArray(Cassandra::TYPE_VARCHAR, $event->getHosts()),
+            'hosts' => CollectionFactory::fromArray(Type::text(), $event->getHosts()),
             'description' => $event->getDescription(),
             'banner' => $event->getBanner(),
         ]]);
