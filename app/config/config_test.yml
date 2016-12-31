@@ -27,3 +27,7 @@ services:
         class: Tapalava\Event\FakeEventRepository
     user.repository:
         class: Tapalava\User\FakeUserRepository
+
+bugsnag:
+    api_key: undefined
+    batch_sending: true

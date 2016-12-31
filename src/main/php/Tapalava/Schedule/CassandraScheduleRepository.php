@@ -2,11 +2,12 @@
 
 namespace Tapalava\Schedule;
 use Cassandra;
-use Cassandra\Collection;
 use Cassandra\ExecutionOptions;
 use Cassandra\SimpleStatement;
 use Cassandra\Uuid;
 use M6Web\Bundle\CassandraBundle\Cassandra\Client;
+use Tapalava\Cassandra\CollectionFactory;
+use Tapalava\Cassandra\Row;
 
 /**
  * Service for looking up/saving information about schedules in the system.
@@ -49,7 +50,7 @@ class CassandraScheduleRepository implements ScheduleRepository
             throw new ScheduleNotFoundException($id);
         }
 
-        return $this->fromRow($results[0]);
+        return $this->fromRow(new Row($results[0]));
     }
 
     /**
@@ -79,10 +80,6 @@ class CassandraScheduleRepository implements ScheduleRepository
     {
         $id = $schedule->getId() ?: (new Uuid())->uuid();
         $days = $this->dateCollectionTransformer->toCollection($schedule->getDays());
-        $tags = new Collection(Cassandra::TYPE_VARCHAR);
-        if (0 !== count($schedule->getTags())) {
-            $tags->add(...$schedule->getTags());
-        }
 
         $statement = new SimpleStatement('
             INSERT INTO schedule (
@@ -104,7 +101,7 @@ class CassandraScheduleRepository implements ScheduleRepository
             'description' => $schedule->getDescription(),
             'banner' => $schedule->getBanner(),
             'location' => $schedule->getLocation(),
-            'tags' => $tags,
+            'tags' => CollectionFactory::fromArray(Cassandra::TYPE_VARCHAR, $schedule->getTags()),
         ]]);
 
         $this->client->execute($statement, $options);
@@ -112,30 +109,26 @@ class CassandraScheduleRepository implements ScheduleRepository
         return $id;
     }
 
-    private function fromRow(array $row): Schedule
+    private function fromRow(Row $row): Schedule
     {
         $days = $this->dateCollectionTransformer->toArray($row['days'] ?? null);
-        $tags = null;
-        if (isset($row['tags']) && $row['tags'] != null) {
-            $tags = $row['tags']->values();
-        }
 
         return new Schedule(
-            $row['id'],
-            $row['name'] ?? null,
+            $row->get('id'),
+            $row->getOptional('name'),
             $days,
-            $row['description'] ?? null,
-            $row['banner'] ?? null,
-            $row['location'] ?? null,
-            $tags
+            $row->getOptional('description'),
+            $row->getOptional('banner'),
+            $row->getOptional('location'),
+            $row->getOptionalCollectionValues('tags')
         );
     }
 
-    private function fromRows(array $rows)
+    private function fromRows($rows)
     {
         $parsed = [];
         foreach ($rows as $row) {
-            $parsed[] = $this->fromRow($row);
+            $parsed[] = $this->fromRow(new Row($row));
         }
 
         return $parsed;

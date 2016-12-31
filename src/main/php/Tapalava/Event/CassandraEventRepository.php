@@ -3,13 +3,12 @@
 namespace Tapalava\Event;
 
 use Cassandra;
-use Cassandra\Collection;
 use Cassandra\ExecutionOptions;
 use Cassandra\SimpleStatement;
-use Cassandra\Timestamp;
 use Cassandra\Uuid;
-use DateTime;
 use M6Web\Bundle\CassandraBundle\Cassandra\Client;
+use Tapalava\Cassandra\CollectionFactory;
+use Tapalava\Cassandra\Row;
 use Tapalava\Schedule\ScheduleNotFoundException;
 
 /**
@@ -48,7 +47,7 @@ class CassandraEventRepository implements EventRepository
             throw new ScheduleNotFoundException($id);
         }
 
-        return $this->fromRow($results[0]);
+        return $this->fromRow(new Row($results[0]));
     }
 
     /**
@@ -78,16 +77,6 @@ class CassandraEventRepository implements EventRepository
     {
         $id = $event->getId() ?: (new Uuid())->uuid();
 
-        $tags = new Collection(Cassandra::TYPE_VARCHAR);
-        if (0 !== count($event->getTags())) {
-            $tags->add(...$event->getTags());
-        }
-
-        $hosts = new Collection(Cassandra::TYPE_VARCHAR);
-        if (0 !== count($event->getHosts())) {
-            $hosts->add(...$event->getHosts());
-        }
-
         $statement = new SimpleStatement('
             INSERT INTO schedule (
                 id,
@@ -109,9 +98,9 @@ class CassandraEventRepository implements EventRepository
             'start' => $event->getStart(),
             'end' => $event->getEnd(),
             'category' => $event->getCategory(),
-            'tags' => $tags,
+            'tags' => CollectionFactory::fromArray(Cassandra::TYPE_VARCHAR, $event->getTags()),
             'room' => $event->getRoom(),
-            'hosts' => $hosts,
+            'hosts' => CollectionFactory::fromArray(Cassandra::TYPE_VARCHAR, $event->getHosts()),
             'description' => $event->getDescription(),
             'banner' => $event->getBanner(),
         ]]);
@@ -124,32 +113,23 @@ class CassandraEventRepository implements EventRepository
     /**
      * Transforms a cassandra data row into an Event object.
      *
-     * @param array $row a single key=>value array from cassandra.
+     * @param Row $row A single result row from Cassandra data
      * @return Event The local model representing the data provided.
      */
-    private function fromRow(array $row): Event
+    private function fromRow(Row $row): Event
     {
-        $tags = null;
-        if (isset($row['tags']) && $row['tags'] != null) {
-            $tags = $row['tags']->values();
-        }
-        $hosts = null;
-        if (isset($row['hosts']) && $row['hosts'] != null) {
-            $hosts = $row['hosts']->values();
-        }
-
         return new Event(
-            $row['id'],
-            $row['schedule_id'],
-            $row['name'] ?? null,
-            $this->toDateTime($row['start'] ?? null),
-            $this->toDateTime($row['end'] ?? null),
-            $row['category'] ?? null,
-            $tags,
-            $row['room'] ?? null,
-            $hosts,
-            $row['description'] ?? null,
-            $row['banner'] ?? null
+            $row->get('id'),
+            $row->get('schedule_id'),
+            $row->getOptional('name'),
+            $row->getOptionalDateTime('start'),
+            $row->getOptionalDateTime('end'),
+            $row->getOptional('category'),
+            $row->getOptionalCollectionValues('tags'),
+            $row->getOptional('room'),
+            $row->getOptionalCollectionValues('hosts'),
+            $row->getOptional('description'),
+            $row->getOptional('banner')
         );
     }
 
@@ -163,28 +143,11 @@ class CassandraEventRepository implements EventRepository
     private function fromRows($rows)
     {
         $parsed = [];
-        foreach ($rows as $row) {
+        foreach ($rows as $rowData) {
+            $row = new Row($rowData);
             $parsed[] = $this->fromRow($row);
         }
 
         return $parsed;
-    }
-
-    /**
-     * Converts an optional timestamp into a DateTime object if present.
-     *
-     * This just simplifies some boilerplate code in the row transofmation
-     *
-     * @param Timestamp|null $timestamp Cassandra timestamp, nullable.
-     * @return DateTime|null A plain DateTime object matching the timestamp, or
-     *         null if the timestamp was not provided.
-     */
-    private function toDateTime(Timestamp $timestamp = null): ?DateTime
-    {
-        if (null === $timestamp) {
-            return null;
-        }
-
-        return new DateTime('@' . $timestamp->time());
     }
 }
