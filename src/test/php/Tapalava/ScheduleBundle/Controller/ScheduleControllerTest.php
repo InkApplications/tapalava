@@ -2,9 +2,9 @@
 
 namespace Tapalava\ScheduleBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Tapalava\AuthenticationTestCase;
 
-class ScheduleControllerTest extends WebTestCase
+class ScheduleControllerTest extends AuthenticationTestCase
 {
     /**
      * Schedule's read page should be returning successful.
@@ -52,9 +52,23 @@ class ScheduleControllerTest extends WebTestCase
      * @test
      * @group functional
      */
-    public function scheduleCreate()
+    public function scheduleCreateLoggedOut()
     {
         $client = static::createClient();
+
+        $client->request('GET', '/schedule/create.html');
+        $this->assertLoginResponse($client->getResponse());
+    }
+
+    /**
+     * Schedule's create page should return successfully
+     *
+     * @test
+     * @group functional
+     */
+    public function scheduleCreate()
+    {
+        $client = $this->logIn(['ROLE_USER']);
 
         $client->request('GET', '/schedule/create.html');
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
@@ -66,11 +80,25 @@ class ScheduleControllerTest extends WebTestCase
      * @test
      * @group functional
      */
-    public function scheduleCreateSubmit()
+    public function scheduleCreateSubmitLoggedOut()
     {
         $client = static::createClient();
 
         $client->request('POST', '/schedule/create.json', [], [], [], '{"schedule": {}}');
-        $this->assertEquals(302, $client->getResponse()->getStatusCode());
+        $this->assertLoginResponse($client->getResponse());
+    }
+
+    /**
+     * Creating a schedule should result in a redirect to the created schedule.
+     *
+     * @test
+     * @group functional
+     */
+    public function scheduleCreateSubmit()
+    {
+        $client = $this->logIn(['ROLE_USER']);
+
+        $client->request('POST', '/schedule/create.json', [], [], [], '{"schedule": {}}');
+        $this->assertRedirect('/schedule/fake-generated-id.json', $client->getResponse());
     }
 }
