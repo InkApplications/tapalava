@@ -40,3 +40,15 @@ services:
             client: "@m6web_cassandra.client.tapalava"
         tags:
             - { name: console.command }
+
+    schedule_voter:
+        class: Tapalava\ScheduleBundle\Voter\ScheduleVoter
+        tags:
+           - { name: security.voter }
+
+    schedule_converter:
+        class: Tapalava\ScheduleBundle\ParamConverter\ScheduleParamConverter
+        arguments:
+            - '@schedule.repository'
+        tags:
+            - { name: request.param_converter, priority: -2, converter: schedule_converter }

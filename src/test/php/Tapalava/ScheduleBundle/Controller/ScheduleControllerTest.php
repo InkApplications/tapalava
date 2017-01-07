@@ -68,7 +68,7 @@ class ScheduleControllerTest extends AuthenticationTestCase
      */
     public function scheduleCreate()
     {
-        $client = $this->logIn(['ROLE_USER']);
+        $client = $this->logIn();
 
         $client->request('GET', '/schedule/create.html');
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
@@ -96,7 +96,7 @@ class ScheduleControllerTest extends AuthenticationTestCase
      */
     public function scheduleCreateSubmit()
     {
-        $client = $this->logIn(['ROLE_USER']);
+        $client = $this->logIn();
 
         $client->request('POST', '/schedule/create.json', [], [], [], '{"schedule": {}}');
         $this->assertRedirect('/schedule/fake-generated-id.json', $client->getResponse());

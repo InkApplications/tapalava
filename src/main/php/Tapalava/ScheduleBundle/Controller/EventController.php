@@ -7,12 +7,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use JMS\SecurityExtraBundle\Annotation\Secure;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
 use Tapalava\Event\EventFormTransformer;
 use Tapalava\Event\EventRepository;
 use Tapalava\Http\RequestParser;
+use Tapalava\Schedule\Schedule;
 use Tapalava\Schedule\ScheduleNotFoundException;
 use Tapalava\Schedule\ScheduleRepository;
 
@@ -62,12 +63,12 @@ class EventController extends Controller
      * @Route("/events.{_format}", methods={"GET"}, name="events-read", defaults={"_format" = "html"})
      * @Template
      */
-    public function indexAction($schedule)
+    public function indexAction(Schedule $schedule)
     {
         try {
             return [
-                'schedule' => $this->scheduleRepository->find($schedule),
-                'events' => $this->eventRepository->findAll($schedule),
+                'schedule' => $schedule,
+                'events' => $this->eventRepository->findAll($schedule->getId()),
             ];
         } catch (ScheduleNotFoundException $e) {
             throw new NotFoundHttpException("Schedule was not found");
@@ -79,32 +80,30 @@ class EventController extends Controller
      *
      * @Route("/create", methods={"GET"}, name="event-create")
      * @Template
+     * @Security("has_role('ROLE_USER') and is_granted('create_event', schedule)")
      */
-    public function createAction($schedule)
+    public function createAction(Schedule $schedule)
     {
-        try {
-            return [
-                'schedule' => $this->scheduleRepository->find($schedule),
-            ];
-        } catch (ScheduleNotFoundException $e) {
-            throw new NotFoundHttpException("Schedule was not found");
-        }
+        return [
+            'schedule' => $schedule,
+        ];
     }
 
     /**
      * Form page for creating a new event for a schedule.
      *
      * @Route("/create.{_format}", methods={"POST"}, name="event-create-submit", defaults={"_format" = "html"})
+     * @Security("has_role('ROLE_USER') and is_granted('create_event', schedule)")
      */
-    public function createSubmitAction($_format, Request $request, $schedule)
+    public function createSubmitAction($_format, Request $request, Schedule $schedule)
     {
         $data = $this->requestParser->getEntityFromPost($request, 'event');
-        $event = $this->formTransformer->fromView($data, $schedule);
+        $event = $this->formTransformer->fromView($data, $schedule->getId());
         $id = $this->eventRepository->save($event);
 
         return $this->redirectToRoute(
             'events-read',
-            ['schedule' => $schedule, '_format' => $_format]
+            ['schedule' => $schedule->getId(), '_format' => $_format]
         );
     }
 }

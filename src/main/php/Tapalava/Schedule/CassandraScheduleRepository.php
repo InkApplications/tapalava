@@ -90,9 +90,10 @@ class CassandraScheduleRepository implements ScheduleRepository
                 banner,
                 location,
                 tags,
+                admin_users,
                 created
             )
-            VALUES (?, ?, ?, ?, ?, ?, ?, toTimestamp(now()))
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, toTimestamp(now()))
         ');
         $options = new ExecutionOptions(['arguments' => [
             'id' => $id,
@@ -101,6 +102,7 @@ class CassandraScheduleRepository implements ScheduleRepository
             'description' => $schedule->getDescription(),
             'banner' => $schedule->getBanner(),
             'location' => $schedule->getLocation(),
+            'admin_users' => $schedule->getAdminUsers(),
             'tags' => CollectionFactory::fromArray(Type::text(), $schedule->getTags()),
         ]]);
 
@@ -120,7 +122,8 @@ class CassandraScheduleRepository implements ScheduleRepository
             $row->getOptional('description'),
             $row->getOptional('banner'),
             $row->getOptional('location'),
-            $row->getOptionalCollectionValues('tags')
+            $row->getOptionalCollectionValues('tags'),
+            $row->getOptionalCollectionValues('admin_users')
         );
     }
 

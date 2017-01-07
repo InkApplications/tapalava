@@ -43,8 +43,9 @@ class DatabaseInstallCommand extends Command
                 banner text,
                 location text,
                 tags list<text>,
+                admin_users list<text>,
                 created timestamp,
-                PRIMARY KEY (id, created)
+                PRIMARY KEY (id)
             );
         '));
     }
@@ -65,7 +66,7 @@ class DatabaseInstallCommand extends Command
                 description text,
                 banner text,
                 created timestamp,
-                PRIMARY KEY (schedule_id, id, start)
+                PRIMARY KEY ((schedule_id), id, start)
             );
         '));
     }
