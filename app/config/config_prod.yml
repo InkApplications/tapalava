@@ -12,7 +12,13 @@ monolog:
         main:
             type:         fingers_crossed
             action_level: error
-            handler:      nested
+            handler:      grouped
+        grouped:
+            type:    group
+            members: [nested, bugsnag]
+        bugsnag:
+            type: service
+            id: bugsnag_handler
         nested:
             type:  stream
             path:  "%kernel.logs_dir%/%kernel.environment%.log"
