@@ -9,6 +9,7 @@ use Cassandra\Statement;
 use DateTime;
 use M6Web\Bundle\CassandraBundle\Cassandra\Client;
 use PHPUnit_Framework_TestCase as TestCase;
+use Doctrine\Common\Collections\ArrayCollection as FakeCassandraRows;
 
 class CassandraScheduleRepositoryTest extends TestCase
 {
@@ -31,7 +32,7 @@ class CassandraScheduleRepositoryTest extends TestCase
                 $dates->add('2016-04-01');
                 $dates->add('2016-04-02');
 
-                return [
+                return new FakeCassandraRows([
                     [
                         'id' => 'fake-id-001',
                         'name' => 'fake-name',
@@ -41,7 +42,7 @@ class CassandraScheduleRepositoryTest extends TestCase
                         'location' => 'Springfield',
                         'tags' => $tags,
                     ]
-                ];
+                ]);
             }
         };
         $stubTransformer = new class extends DateCollectionTransformer {
@@ -79,7 +80,7 @@ class CassandraScheduleRepositoryTest extends TestCase
         $stubClient = new class extends Client {
             public function __construct() {}
             public function execute(Statement $statement, ExecutionOptions $options = null) {
-                return [];
+                return new FakeCassandraRows([]);
             }
         };
         $stubTransformer = new class extends DateCollectionTransformer {
@@ -110,7 +111,7 @@ class CassandraScheduleRepositoryTest extends TestCase
                 $dates->add('2016-04-01');
                 $dates->add('2016-04-02');
 
-                return [
+                return new FakeCassandraRows([
                     [
                         'id' => 'fake-id-001',
                         'name' => 'fake-name',
@@ -123,7 +124,7 @@ class CassandraScheduleRepositoryTest extends TestCase
                     [
                         'id' => 'fake-id-002',
                     ],
-                ];
+                ]);
             }
         };
         $stubTransformer = new class extends DateCollectionTransformer {
@@ -166,7 +167,7 @@ class CassandraScheduleRepositoryTest extends TestCase
             public function __construct() {}
 
             public function execute(Statement $statement, ExecutionOptions $options = null) {
-                return [];
+                return new FakeCassandraRows([]);
             }
         };
         $stubTransformer = new class extends DateCollectionTransformer {
@@ -212,7 +213,7 @@ class CassandraScheduleRepositoryTest extends TestCase
                 $this->test->assertEquals('a'  , $arguments['tags']->get(0));
                 $this->test->assertEquals('b'  , $arguments['tags']->get(1));
 
-                return [];
+                return new FakeCassandraRows([]);
             }
         };
         $stubTransformer = new class extends DateCollectionTransformer {
@@ -272,7 +273,7 @@ class CassandraScheduleRepositoryTest extends TestCase
                 $this->test->assertInstanceOf(Collection::class, $arguments['tags']);
                 $this->test->assertEquals(0 , $arguments['tags']->count());
 
-                return [];
+                return new FakeCassandraRows([]);
             }
         };
         $stubTransformer = new class extends DateCollectionTransformer {

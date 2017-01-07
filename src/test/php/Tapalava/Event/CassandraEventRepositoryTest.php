@@ -9,6 +9,7 @@ use Cassandra\Statement;
 use DateTime;
 use M6Web\Bundle\CassandraBundle\Cassandra\Client;
 use PHPUnit_Framework_TestCase as TestCase;
+use Doctrine\Common\Collections\ArrayCollection as FakeCassandraRows;
 
 class CassandraEventRepositoryTest extends TestCase
 {
@@ -31,7 +32,7 @@ class CassandraEventRepositoryTest extends TestCase
                 $hosts->add('jane');
                 $hosts->add('john');
 
-                return [
+                return new FakeCassandraRows([
                     [
                         'id' => 'fake-id-001',
                         'schedule_id' => 'fake-schedule-id',
@@ -45,7 +46,7 @@ class CassandraEventRepositoryTest extends TestCase
                         'description' => 'fake description',
                         'banner' => 'http://nope.city/.gif',
                     ]
-                ];
+                ]);
             }
         };
         $repository = new CassandraEventRepository($stubClient);
@@ -81,7 +82,7 @@ class CassandraEventRepositoryTest extends TestCase
         $stubClient = new class extends Client {
             public function __construct() {}
             public function execute(Statement $statement, ExecutionOptions $options = null) {
-                return [];
+                return new FakeCassandraRows([]);
             }
         };
 
@@ -109,7 +110,7 @@ class CassandraEventRepositoryTest extends TestCase
                 $hosts->add('jane');
                 $hosts->add('john');
 
-                return [
+                return new FakeCassandraRows([
                     [
                         'id' => 'fake-id-001',
                         'schedule_id' => 'fake-schedule-id',
@@ -127,7 +128,7 @@ class CassandraEventRepositoryTest extends TestCase
                         'id' => 'fake-id-002',
                         'schedule_id' => 'fake-schedule-id',
                     ]
-                ];
+                ]);
             }
         };
         $repository = new CassandraEventRepository($stubClient);
@@ -169,7 +170,7 @@ class CassandraEventRepositoryTest extends TestCase
             public function __construct() {}
 
             public function execute(Statement $statement, ExecutionOptions $options = null) {
-                return [];
+                return new FakeCassandraRows([]);
             }
         };
         $repository = new CassandraEventRepository($stubClient);
@@ -213,7 +214,7 @@ class CassandraEventRepositoryTest extends TestCase
                 $this->test->assertEquals('This is a fake event description', $arguments['description']);
                 $this->test->assertEquals('http://google.com/google.png', $arguments['banner']);
 
-                return [];
+                return new FakeCassandraRows([]);
             }
         };
         $repository = new CassandraEventRepository($spyClient);
@@ -266,7 +267,7 @@ class CassandraEventRepositoryTest extends TestCase
                 $this->test->assertNull($arguments['description']);
                 $this->test->assertNull($arguments['banner']);
 
-                return [];
+                return new FakeCassandraRows([]);
             }
         };
         $repository = new CassandraEventRepository($spyClient);
