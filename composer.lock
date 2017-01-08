@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "4f48b479eebfba4d256400e67165306f",
-    "content-hash": "b50f81a3d2328399973fffdb8c522854",
+    "hash": "f748788ac061e81b95ff1a5d5981c69c",
+    "content-hash": "a11f59ba2af73a3373692d964c069cd1",
     "packages": [
         {
             "name": "bugsnag/bugsnag",
@@ -855,16 +855,16 @@
         },
         {
             "name": "inkapplications/knock",
-            "version": "v0.0.2",
+            "version": "v0.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/InkApplications/Knock.git",
-                "reference": "d36f42cfc5cb3b9ae3afc22d47173953a53096fd"
+                "reference": "ae47ca73e48df55925067c913ac566d3ced56c1f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/InkApplications/Knock/zipball/d36f42cfc5cb3b9ae3afc22d47173953a53096fd",
-                "reference": "d36f42cfc5cb3b9ae3afc22d47173953a53096fd",
+                "url": "https://api.github.com/repos/InkApplications/Knock/zipball/ae47ca73e48df55925067c913ac566d3ced56c1f",
+                "reference": "ae47ca73e48df55925067c913ac566d3ced56c1f",
                 "shasum": ""
             },
             "require": {
@@ -889,7 +889,7 @@
                 }
             ],
             "description": "Symfony security authentication through email.",
-            "time": "2016-12-11 15:34:16"
+            "time": "2017-01-08 08:05:28"
         },
         {
             "name": "jms/aop-bundle",

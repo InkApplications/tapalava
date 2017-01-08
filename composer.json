@@ -21,7 +21,7 @@
         "jms/security-extra-bundle": "^1.6",
         "knplabs/knp-markdown-bundle": "^1.5",
         "jms/serializer-bundle": "^1.1",
-        "inkapplications/knock": "v0.0.2",
+        "inkapplications/knock": "v0.0.4",
         "m6web/cassandra-bundle": "^1.0",
         "bugsnag/bugsnag-symfony": "^1.0",
         "mead-steve/mono-snag": "^3.0"

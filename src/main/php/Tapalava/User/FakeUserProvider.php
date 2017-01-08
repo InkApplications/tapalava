@@ -13,6 +13,7 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
  * password `abc-123`
  *
  * @author Maxwell Vandervelde <Max@MaxVandervelde.com>
+ * @codeCoverageIgnore
  */
 class FakeUserProvider implements UserProviderInterface
 {
@@ -30,7 +31,7 @@ class FakeUserProvider implements UserProviderInterface
      */
     public function loadUserByUsername($username)
     {
-        return new User('fake-user-001', $username, ['ROLE_ADMIN'], '$2y$13$.seDcm.uabVc6HvQshpp7.9fQJrChYuid6zRvZD0BXtegOPV0Aja2', 'def-456', new DateTime());
+        return new Credentials('fake-user-001', $username, ['ROLE_ADMIN'], '$2y$13$.seDcm.uabVc6HvQshpp7.9fQJrChYuid6zRvZD0BXtegOPV0Aja2', 'def-456', new DateTime());
     }
 
     /**
@@ -61,6 +62,6 @@ class FakeUserProvider implements UserProviderInterface
      */
     public function supportsClass($class)
     {
-        return 'Tapalava\User\User' === $class;
+        return 'Tapalava\User\Credentials' === $class;
     }
 }

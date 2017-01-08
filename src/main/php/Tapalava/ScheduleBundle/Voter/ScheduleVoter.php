@@ -5,6 +5,7 @@ namespace Tapalava\ScheduleBundle\Voter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Tapalava\Schedule\Schedule;
+use Tapalava\User\Credentials;
 use Tapalava\User\User;
 
 /**
@@ -27,14 +28,14 @@ class ScheduleVoter extends Voter
 
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
     {
-        /** @var User $user */
+        /** @var Credentials $user */
         $user = $token->getUser();
 
-        if (!$user instanceof User) {
+        if (!$user instanceof Credentials) {
             return false;
         }
 
-        $userId = $user->getId();
+        $userId = $user->getUsername();
 
         return in_array($userId, $subject->getAdminUsers());
     }

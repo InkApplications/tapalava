@@ -28,20 +28,20 @@ class DatabaseDropCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $output->writeln('Dropping user Table');
-        $this->dropUserTable();
+        $output->writeln('Dropping User Profile Table');
+        $this->dropProfile();
 
-        $output->writeln('Dropping user email ref Table');
-        $this->dropUserByEmailRefTable();
+        $output->writeln('Dropping user Credentials Table');
+        $this->dropCredentials();
     }
 
-    private function dropUserTable()
+    private function dropProfile()
     {
-        $this->client->execute(new SimpleStatement('DROP TABLE user;'));
+        $this->client->execute(new SimpleStatement('DROP TABLE profile;'));
     }
 
-    private function dropUserByEmailRefTable()
+    private function dropCredentials()
     {
-        $this->client->execute(new SimpleStatement('DROP TABLE user_by_email;'));
+        $this->client->execute(new SimpleStatement('DROP TABLE credentials;'));
     }
 }

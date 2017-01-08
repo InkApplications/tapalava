@@ -5,7 +5,7 @@ namespace Tapalava\User;
 use DateTime;
 use PHPUnit_Framework_TestCase as TestCase;
 
-class UserTest extends TestCase
+class CredentialsTest extends TestCase
 {
     /**
      * Check that each of the user attributes works as expected.
@@ -14,7 +14,7 @@ class UserTest extends TestCase
      */
     public function attributes()
     {
-        $test = new User(
+        $test = new Credentials(
             'test-id',
             'tester@tapalava.com',
             ['role-a', 'role-b'],
@@ -23,8 +23,8 @@ class UserTest extends TestCase
             new DateTime('2016-01-02T3:45:57Z')
         );
 
-        $this->assertEquals('test-id', $test->getId());
-        $this->assertEquals('tester@tapalava.com', $test->getUsername());
+        $this->assertEquals('test-id', $test->getUsername());
+        $this->assertEquals('test-id', $test->getUsername());
         $this->assertEquals('tester@tapalava.com', $test->getEmail());
         $this->assertEquals(2, count($test->getRoles()));
         $this->assertEquals('role-a', $test->getRoles()[0]);
@@ -41,9 +41,9 @@ class UserTest extends TestCase
      */
     public function defaults()
     {
-        $test = new User();
+        $test = new Credentials();
 
-        $this->assertNull($test->getId());
+        $this->assertNull($test->getUsername());
         $this->assertNull($test->getUsername());
         $this->assertNull($test->getEmail());
         $this->assertNull($test->getPassword());

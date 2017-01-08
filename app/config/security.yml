@@ -1,6 +1,6 @@
 security:
     encoders:
-       Tapalava\User\User: bcrypt
+       Tapalava\User\Credentials: bcrypt
 
     role_hierarchy:
         ROLE_USER: ~

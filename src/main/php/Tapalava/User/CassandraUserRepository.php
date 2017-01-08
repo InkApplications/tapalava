@@ -2,8 +2,6 @@
 
 namespace Tapalava\User;
 
-use Cassandra;
-use Cassandra\BatchStatement;
 use Cassandra\ExecutionOptions;
 use Cassandra\SimpleStatement;
 use Cassandra\Timestamp;
@@ -13,12 +11,10 @@ use DateTime;
 use InkApplications\Knock\User\CredentialsNotFoundException;
 use InkApplications\Knock\User\TemporaryPasswordUser;
 use M6Web\Bundle\CassandraBundle\Cassandra\Client;
-use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
-use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Tapalava\Cassandra\CollectionFactory;
-use TypeError;
+use Tapalava\Cassandra\Row;
 
 /**
  * Lookup and Persistence of User information into a cassandra database.
@@ -30,49 +26,22 @@ class CassandraUserRepository implements UserRepository, UserProviderInterface
     private $client;
 
     /**
-     * CassandraUserRepository constructor.
-     * @param $client
+     * @param $client Cassandra data connection.
      */
     public function __construct(Client $client)
     {
         $this->client = $client;
     }
 
-    /**
-     * Save the user and/or its password credentials.
-     *
-     * This method is invoked after the user's password has been modified and
-     * needs to be persisted to the application's data storage.
-     *
-     * @param TemporaryPasswordUser $user The user/credentials that need to be saved.
-     * @throws TypeError If this is given a differnent user object than our local one.
-     */
-    public function saveUserCredentials(TemporaryPasswordUser $user)
+    public function saveCredentials(Credentials $user)
     {
-        /** @var User $user */
-        if (false === $user instanceof User) {
-            throw new TypeError();
-        }
-
         $passwordCreated = $user->getPasswordCreated();
         $passwordCreatedTimestamp = null === $passwordCreated ? null : new Timestamp($passwordCreated->getTimestamp());
 
-        $batch = new BatchStatement(Cassandra::BATCH_LOGGED);
-        $userStatement = $this->client->prepare('
-            INSERT INTO user (
-                id,
+        $statement = new SimpleStatement('
+            INSERT INTO credentials (
                 email,
-                roles,
-                password,
-                salt,
-                password_created
-            )
-            VALUES (?, ?, ?, ?, ?, ?)
-        ');
-        $emailStatement = $this->client->prepare('
-            INSERT INTO user_by_email (
-                id,
-                email,
+                profile_id,
                 roles,
                 password,
                 salt,
@@ -81,128 +50,96 @@ class CassandraUserRepository implements UserRepository, UserProviderInterface
             VALUES (?, ?, ?, ?, ?, ?)
         ');
 
-        $arguments = [
-            'id' => $user->getId(),
+        $options = new ExecutionOptions(['arguments' => [
             'email' => $user->getEmail(),
+            'profile_id' => $user->getUsername(),
             'roles' => CollectionFactory::fromArray(Type::text(), $user->getRoles()),
             'password' => $user->getPassword(),
             'salt' => $user->getSalt(),
             'password_created' => $passwordCreatedTimestamp,
-        ];
+        ]]);
 
-        $batch->add($userStatement, $arguments);
-        $batch->add($emailStatement, $arguments);
-        $this->client->execute($batch);
+        $this->client->execute($statement, $options);
     }
 
-    /**
-     * Find user credentials by an email address.
-     *
-     * @param string $email The unique email address of the user to lookup.
-     * @return TemporaryPasswordUser A user that matches the given email.
-     * @throws CredentialsNotFoundException If no user matching the given email
-     *         Could be found.
-     */
     public function findCredentialsByEmail($email): TemporaryPasswordUser
     {
-            $statement = new SimpleStatement('SELECT * FROM user_by_email WHERE email=?');
-            $options = new ExecutionOptions(['arguments' => ['email' => $email]]);
+        $email = strtolower($email);
+        $statement = new SimpleStatement('SELECT * FROM credentials WHERE email=?');
+        $options = new ExecutionOptions(['arguments' => ['email' => $email]]);
 
-            $results = $this->client->execute($statement, $options);
+        $results = $this->client->execute($statement, $options);
 
-            if ($results->count() == 0) {
-                throw new CredentialsNotFoundException($email);
-            }
+        if ($results->count() == 0) {
+            throw new CredentialsNotFoundException($email);
+        }
 
-            return $this->fromRow($results->first());
+        return $this->credentialsFromRow(new Row($results->first()));
     }
 
-    /**
-     * Create a new local user object to be persisted.
-     *
-     * @param string $email The user's email address to base the user object on.
-     * @return TemporaryPasswordUser A newly created user-model to be persisted.
-     */
     public function createUser($email): TemporaryPasswordUser
     {
         $uuid = new Uuid();
+        $email = strtolower($email);
 
-        return new User($uuid->uuid(), $email, ['ROLE_USER']);
+        return new Credentials($uuid->uuid(), $email, ['ROLE_USER']);
     }
 
-    /**
-     * Loads the user for the given username.
-     *
-     * This method must throw UsernameNotFoundException if the user is not
-     * found.
-     *
-     * @param string $username The username
-     *
-     * @return UserInterface
-     *
-     * @throws UsernameNotFoundException if the user is not found
-     */
     public function loadUserByUsername($username)
     {
         return $this->findCredentialsByEmail($username);
     }
 
-    /**
-     * Refreshes the user for the account interface.
-     *
-     * It is up to the implementation to decide if the user data should be
-     * totally reloaded (e.g. from the database), or if the UserInterface
-     * object can just be merged into some internal array of users / identity
-     * map.
-     *
-     * @param UserInterface $user
-     *
-     * @return UserInterface
-     *
-     * @throws UnsupportedUserException if the account is not supported
-     */
     public function refreshUser(UserInterface $user)
     {
         return $user;
     }
 
-    /**
-     * Whether this provider supports the given user class.
-     *
-     * @param string $class
-     *
-     * @return bool
-     */
     public function supportsClass($class)
     {
-        return $class instanceof User;
+        return $class instanceof Credentials;
+    }
+
+    public function updateUserCredentials(TemporaryPasswordUser $user, $password, $salt, DateTime $passwordCreated)
+    {
+        $updated = new Credentials(
+            $user->getUsername(),
+            $user->getEmail(),
+            $user->getRoles(),
+            $password,
+            $salt,
+            $passwordCreated
+        );
+
+        $this->saveCredentials($updated);
+    }
+
+    public function destroyUserCredentials(TemporaryPasswordUser $user)
+    {
+        $updated = new Credentials(
+            $user->getUsername(),
+            $user->getEmail(),
+            $user->getRoles()
+        );
+
+        $this->saveCredentials($updated);
     }
 
     /**
      * Transform a cassandra row into a data model.
      *
-     * @param array $row A single row returned from a cassandra lookup.
-     * @return User
+     * @param Row $row A single row returned from a cassandra lookup.
+     * @return Credentials A user object created from the row's columns
      */
-    private function fromRow(array $row)
+    private function credentialsFromRow(Row $row): Credentials
     {
-        $roles = [];
-        if (isset($row['roles']) && $row['roles'] !== null) {
-            $roles = $row['roles']->values();
-        }
-
-        $passwordCreated = null;
-        if (isset($row['password_created']) && $row['password_created'] !== null) {
-            $passwordCreated = new DateTime('@' . $row['password_created']);
-        }
-
-        $user = new User(
-            $row['id'] ?? null,
-            $row['email'] ?? null,
-            $roles,
-            $row['password'] ?? null,
-            $row['salt'] ?? null,
-            $passwordCreated
+        $user = new Credentials(
+            $row->get('profile_id'),
+            $row->get('email'),
+            $row->getOptionalCollectionValues('roles'),
+            $row->getOptional('password'),
+            $row->getOptional('salt'),
+            $row->getOptionalDateTime('password_created')
         );
 
         return $user;

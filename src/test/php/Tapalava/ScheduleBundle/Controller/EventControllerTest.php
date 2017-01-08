@@ -3,6 +3,7 @@
 namespace Tapalava\ScheduleBundle\Controller;
 
 use Tapalava\AuthenticationTestCase;
+use Tapalava\User\Credentials;
 use Tapalava\User\User;
 
 class EventControllerTest extends AuthenticationTestCase
@@ -60,7 +61,7 @@ class EventControllerTest extends AuthenticationTestCase
      */
     public function createEventForm()
     {
-        $client = $this->logIn(new User('fake-user-admin', 'testuser@tapalava.com', ['ROLE_USER']));
+        $client = $this->logIn(new Credentials('fake-user-admin', 'testuser@tapalava.com', ['ROLE_USER']));
 
         $client->request('GET', '/schedule/fake-id-001/create');
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
