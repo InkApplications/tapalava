@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use JMS\SecurityExtraBundle\Annotation\Secure;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
 use Tapalava\Http\RequestParser;
@@ -62,6 +62,7 @@ class ScheduleController extends Controller
      *
      * @Template
      * @Route("/create.{_format}", methods={"GET"}, name="schedule-create", defaults={"_format" = "html"})
+     * @Security("has_role('ROLE_USER')")
      */
     public function createAction()
     {
@@ -73,6 +74,7 @@ class ScheduleController extends Controller
      *
      * @Template
      * @Route("/create.{_format}", methods={"POST"}, name="schedule-create-submit", defaults={"_format" = "html"})
+     * @Security("has_role('ROLE_USER')")
      */
     public function createSubmitAction($_format, Request $request)
     {

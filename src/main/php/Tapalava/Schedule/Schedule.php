@@ -45,6 +45,11 @@ class Schedule
     private $tags = [];
 
     /**
+     * @var array
+     */
+    private $adminUsers = [];
+
+    /**
      * @param string|null $id A UUID For this object.
      * @param string|null $name The name of the large-event that this schedule is for.
      * @param string|null $description A User provided description of what the large-event is. (optional)
@@ -60,7 +65,8 @@ class Schedule
         $description = null,
         $banner = null,
         $location = null,
-        array $tags = null
+        array $tags = null,
+        array $adminUsers = null
     ) {
         $this->id = $id;
         $this->name = $name;
@@ -69,6 +75,7 @@ class Schedule
         $this->days = $days ?: [];
         $this->location = $location;
         $this->tags = $tags ?: [];
+        $this->adminUsers = $adminUsers ?: [];
     }
 
     /**
@@ -125,6 +132,14 @@ class Schedule
     public function getTags(): array
     {
         return $this->tags;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAdminUsers(): array
+    {
+        return $this->adminUsers;
     }
 
     function __toString()

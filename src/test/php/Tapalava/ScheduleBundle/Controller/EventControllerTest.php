@@ -2,9 +2,10 @@
 
 namespace Tapalava\ScheduleBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Tapalava\AuthenticationTestCase;
+use Tapalava\User\User;
 
-class EventControllerTest extends WebTestCase
+class EventControllerTest extends AuthenticationTestCase
 {
     /**
      * Events's index page should be returning successful.
@@ -43,9 +44,23 @@ class EventControllerTest extends WebTestCase
      * @test
      * @group functional
      */
+    public function createEventFormForbidden()
+    {
+        $client = $this->logIn();
+
+        $client->request('GET', '/schedule/fake-id-001/create');
+        $this->assertEquals(403, $client->getResponse()->getStatusCode());
+    }
+
+    /**
+     * Form page for creating a new event should load successfully.
+     *
+     * @test
+     * @group functional
+     */
     public function createEventForm()
     {
-        $client = static::createClient();
+        $client = $this->logIn(new User('fake-user-admin', 'testuser@tapalava.com', ['ROLE_USER']));
 
         $client->request('GET', '/schedule/fake-id-001/create');
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
@@ -76,6 +91,6 @@ class EventControllerTest extends WebTestCase
         $client = static::createClient();
 
         $client->request('POST', '/schedule/fake-id-001/create.json', [], [], [], '{"event": {}}');
-        $this->assertEquals(302, $client->getResponse()->getStatusCode());
+        $this->assertLoginResponse($client->getResponse());
     }
 }

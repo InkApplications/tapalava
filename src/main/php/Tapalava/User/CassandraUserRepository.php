@@ -4,10 +4,10 @@ namespace Tapalava\User;
 
 use Cassandra;
 use Cassandra\BatchStatement;
-use Cassandra\Collection;
 use Cassandra\ExecutionOptions;
 use Cassandra\SimpleStatement;
 use Cassandra\Timestamp;
+use Cassandra\Type;
 use Cassandra\Uuid;
 use DateTime;
 use InkApplications\Knock\User\CredentialsNotFoundException;
@@ -17,6 +17,7 @@ use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
+use Tapalava\Cassandra\CollectionFactory;
 use TypeError;
 
 /**
@@ -53,9 +54,6 @@ class CassandraUserRepository implements UserRepository, UserProviderInterface
             throw new TypeError();
         }
 
-        $roles = new Collection(Cassandra::TYPE_VARCHAR);
-        $roles->add(...$user->getRoles());
-
         $passwordCreated = $user->getPasswordCreated();
         $passwordCreatedTimestamp = null === $passwordCreated ? null : new Timestamp($passwordCreated->getTimestamp());
 
@@ -82,10 +80,11 @@ class CassandraUserRepository implements UserRepository, UserProviderInterface
             )
             VALUES (?, ?, ?, ?, ?, ?)
         ');
+
         $arguments = [
             'id' => $user->getId(),
             'email' => $user->getEmail(),
-            'roles' => $roles,
+            'roles' => CollectionFactory::fromArray(Type::text(), $user->getRoles()),
             'password' => $user->getPassword(),
             'salt' => $user->getSalt(),
             'password_created' => $passwordCreatedTimestamp,

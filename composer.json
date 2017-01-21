@@ -8,7 +8,7 @@
         "classmap": [ "app/AppKernel.php", "app/AppCache.php" ]
     },
     "autoload-dev": {
-        "psr-4": { "Tests\\": "src/test/php/" }
+        "psr-4": { "": "src/test/php/" }
     },
     "require": {
         "php": ">=7.1.0",

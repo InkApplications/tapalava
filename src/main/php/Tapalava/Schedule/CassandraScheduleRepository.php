@@ -1,9 +1,9 @@
 <?php
 
 namespace Tapalava\Schedule;
-use Cassandra;
 use Cassandra\ExecutionOptions;
 use Cassandra\SimpleStatement;
+use Cassandra\Type;
 use Cassandra\Uuid;
 use M6Web\Bundle\CassandraBundle\Cassandra\Client;
 use Tapalava\Cassandra\CollectionFactory;
@@ -90,9 +90,10 @@ class CassandraScheduleRepository implements ScheduleRepository
                 banner,
                 location,
                 tags,
+                admin_users,
                 created
             )
-            VALUES (?, ?, ?, ?, ?, ?, ?, toTimestamp(now()))
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, toTimestamp(now()))
         ');
         $options = new ExecutionOptions(['arguments' => [
             'id' => $id,
@@ -101,7 +102,8 @@ class CassandraScheduleRepository implements ScheduleRepository
             'description' => $schedule->getDescription(),
             'banner' => $schedule->getBanner(),
             'location' => $schedule->getLocation(),
-            'tags' => CollectionFactory::fromArray(Cassandra::TYPE_VARCHAR, $schedule->getTags()),
+            'admin_users' => $schedule->getAdminUsers(),
+            'tags' => CollectionFactory::fromArray(Type::text(), $schedule->getTags()),
         ]]);
 
         $this->client->execute($statement, $options);
@@ -120,7 +122,8 @@ class CassandraScheduleRepository implements ScheduleRepository
             $row->getOptional('description'),
             $row->getOptional('banner'),
             $row->getOptional('location'),
-            $row->getOptionalCollectionValues('tags')
+            $row->getOptionalCollectionValues('tags'),
+            $row->getOptionalCollectionValues('admin_users')
         );
     }
 
