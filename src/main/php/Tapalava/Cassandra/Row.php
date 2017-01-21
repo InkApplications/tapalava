@@ -46,6 +46,7 @@ class Row implements ArrayAccess
      * </p>
      * @return mixed Can return all value types.
      * @since 5.0.0
+     * @throws ColumnNotFoundException
      */
     public function offsetGet($offset)
     {

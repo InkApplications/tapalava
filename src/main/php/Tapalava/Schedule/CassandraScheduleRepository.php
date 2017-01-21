@@ -2,6 +2,7 @@
 
 namespace Tapalava\Schedule;
 use Cassandra\ExecutionOptions;
+use Cassandra\Rows;
 use Cassandra\SimpleStatement;
 use Cassandra\Type;
 use Cassandra\Uuid;
@@ -44,13 +45,14 @@ class CassandraScheduleRepository implements ScheduleRepository
         $statement = new SimpleStatement('SELECT * FROM schedule WHERE id=?');
         $options = new ExecutionOptions(['arguments' => ['id' => $id]]);
 
+        /** @var Rows $results */
         $results = $this->client->execute($statement, $options);
 
-        if (count($results) == 0) {
+        if ($results->count() === 0) {
             throw new ScheduleNotFoundException($id);
         }
 
-        return $this->fromRow(new Row($results[0]));
+        return $this->fromRow(new Row($results->first()));
     }
 
     /**

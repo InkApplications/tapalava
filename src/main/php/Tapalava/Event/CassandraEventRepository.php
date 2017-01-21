@@ -3,6 +3,7 @@
 namespace Tapalava\Event;
 
 use Cassandra\ExecutionOptions;
+use Cassandra\Rows;
 use Cassandra\SimpleStatement;
 use Cassandra\Type;
 use Cassandra\Uuid;
@@ -41,13 +42,14 @@ class CassandraEventRepository implements EventRepository
         $statement = new SimpleStatement('SELECT * FROM event WHERE schedule_id=? AND id=?');
         $options = new ExecutionOptions(['arguments' => ['schedule_id' => $scheduleId, 'id' => $id]]);
 
+        /** @var Rows $results */
         $results = $this->client->execute($statement, $options);
 
-        if (count($results) == 0) {
+        if ($results->count() === 0) {
             throw new ScheduleNotFoundException($id);
         }
 
-        return $this->fromRow(new Row($results[0]));
+        return $this->fromRow(new Row($results->first()));
     }
 
     /**
