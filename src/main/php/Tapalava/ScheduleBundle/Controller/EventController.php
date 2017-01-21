@@ -2,6 +2,7 @@
 
 namespace Tapalava\ScheduleBundle\Controller;
 
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -37,24 +38,30 @@ class EventController extends Controller
     /** @var EventFormTransformer For transforming data to and from a view format. */
     private $formTransformer;
 
+    /** @var LoggerInterface */
+    private $logger;
+
     /**
      * @InjectParams({
      *     "scheduleRepository" = @Inject("schedule.repository"),
      *     "eventRepository" = @Inject("event.repository"),
      *     "requestParser" = @Inject("http.request_parser"),
-     *     "formTransformer" = @Inject("event.form_transformer")
+     *     "formTransformer" = @Inject("event.form_transformer"),
+     *     "logger" = @Inject("logger")
      * })
      */
     public function __construct(
         ScheduleRepository $scheduleRepository,
         EventRepository $eventRepository,
         RequestParser $requestParser,
-        EventFormTransformer $formTransformer
+        EventFormTransformer $formTransformer,
+        LoggerInterface $logger
     ) {
         $this->scheduleRepository = $scheduleRepository;
         $this->eventRepository = $eventRepository;
         $this->requestParser = $requestParser;
         $this->formTransformer = $formTransformer;
+        $this->logger = $logger;
     }
 
     /**
@@ -65,14 +72,10 @@ class EventController extends Controller
      */
     public function indexAction(Schedule $schedule)
     {
-        try {
-            return [
-                'schedule' => $schedule,
-                'events' => $this->eventRepository->findAll($schedule->getId()),
-            ];
-        } catch (ScheduleNotFoundException $e) {
-            throw new NotFoundHttpException("Schedule was not found");
-        }
+        return [
+            'schedule' => $schedule,
+            'events' => $this->eventRepository->findAll($schedule->getId()),
+        ];
     }
 
     /**
@@ -100,6 +103,7 @@ class EventController extends Controller
         $data = $this->requestParser->getEntityFromPost($request, 'event');
         $event = $this->formTransformer->fromView($data, $schedule->getId());
         $id = $this->eventRepository->save($event);
+        $this->logger->info("Created Event with ID=$id");
 
         return $this->redirectToRoute(
             'events-read',

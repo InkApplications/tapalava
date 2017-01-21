@@ -23,7 +23,8 @@
         "jms/serializer-bundle": "^1.1",
         "inkapplications/knock": "v0.0.2",
         "m6web/cassandra-bundle": "^1.0",
-        "bugsnag/bugsnag-symfony": "^1.0"
+        "bugsnag/bugsnag-symfony": "^1.0",
+        "mead-steve/mono-snag": "^3.0"
     },
     "require-dev": {
         "sensio/generator-bundle": "^3.0",

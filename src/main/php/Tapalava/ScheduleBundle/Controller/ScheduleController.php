@@ -2,6 +2,7 @@
 
 namespace Tapalava\ScheduleBundle\Controller;
 
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -40,21 +41,27 @@ class ScheduleController extends Controller
     /** @var RequestParser Used for extracting view data from HTTP Reqeusts. */
     private $requestParser;
 
+    /** @var LoggerInterface application log. */
+    private $logger;
+
     /**
      * @InjectParams({
      *     "scheduleRepository" = @Inject("schedule.repository"),
      *     "formTransformer" = @Inject("schedule.form_transformer"),
      *     "requestParser" = @Inject("http.request_parser"),
+     *     "logger" = @Inject("logger")
      * })
      */
     public function __construct(
         ScheduleRepository $scheduleRepository,
         ScheduleFormTransformer $formTransformer,
-        RequestParser $requestParser
+        RequestParser $requestParser,
+        LoggerInterface $logger
     ) {
         $this->scheduleRepository = $scheduleRepository;
         $this->formTransformer = $formTransformer;
         $this->requestParser = $requestParser;
+        $this->logger = $logger;
     }
 
     /**
@@ -81,10 +88,11 @@ class ScheduleController extends Controller
         $data = $this->requestParser->getEntityFromPost($request, 'schedule');
         $schedule = $this->formTransformer->fromView($data);
         $id = $this->scheduleRepository->save($schedule);
+        $this->logger->info("Created Schedule with ID: $id");
 
         return $this->redirectToRoute(
             'schedule-read',
-            ['id' => $id, '_format' => $_format]
+            ['schedule' => $id, '_format' => $_format]
         );
     }
 
@@ -92,18 +100,14 @@ class ScheduleController extends Controller
      * Read the Information about a schedule.
      *
      * @Template
-     * @Route("/{id}.{_format}", methods={"GET"}, name="schedule-read", defaults={"_format" = "html"})
-     * @param string $id The UUID of the schedule to display information about.
+     * @Route("/{schedule}.{_format}", methods={"GET"}, name="schedule-read", defaults={"_format" = "html"})
+     * @param Schedule $schedule The Schedule to be displayed.
      * @return array templating information
      */
-    public function readAction($id)
+    public function readAction(Schedule $schedule)
     {
-        try {
-            return [
-                'schedule' => $this->scheduleRepository->find($id),
-            ];
-        } catch (ScheduleNotFoundException $e) {
-            throw new NotFoundHttpException("Schedule was not found");
-        }
+        return [
+            'schedule' => $schedule,
+        ];
     }
 }
