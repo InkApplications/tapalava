@@ -6,6 +6,7 @@ use PHPUnit_Framework_TestCase as TestCase;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Tapalava\Schedule\Schedule;
+use Tapalava\User\Credentials;
 use Tapalava\User\User;
 
 class ScheduleVoterTest extends TestCase
@@ -31,10 +32,10 @@ class ScheduleVoterTest extends TestCase
     {
         $schedule = new Schedule(null, null, null, null, null, null, null, ['fake-test-user']);
 
-        $adminUser = new User('fake-test-user', 'testuser@tapalava.com', ['ROLE_USER']);
+        $adminUser = new Credentials('fake-test-user', 'testuser@tapalava.com', ['ROLE_USER']);
         $adminToken = new UsernamePasswordToken($adminUser, null, 'test');
 
-        $randomUser = new User('random-test-user', 'testuser@tapalava.com', ['ROLE_USER']);
+        $randomUser = new Credentials('random-test-user', 'testuser@tapalava.com', ['ROLE_USER']);
         $randomUserToken = new UsernamePasswordToken($randomUser, null, 'test');
 
         $anonymousToken = new AnonymousToken(null, 'anon', []);

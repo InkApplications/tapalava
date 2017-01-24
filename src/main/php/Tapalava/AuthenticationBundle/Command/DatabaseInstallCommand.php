@@ -26,34 +26,31 @@ class DatabaseInstallCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $output->writeln('Creating User Table');
-        $this->createUserTable();
+        $output->writeln('Creating User Profile Table');
+        $this->createProfileTable();
 
-        $output->writeln('Creating User email Ref Table');
-        $this->createUserByEmailRefTable();
+        $output->writeln('Creating User Credentials Table');
+        $this->createCredentialsTable();
     }
 
-    private function createUserTable()
+    private function createProfileTable()
     {
         $this->client->execute(new SimpleStatement('
-            CREATE TABLE user (
+            CREATE TABLE profile (
                 id text,
-                email text,
-                roles list<text>,
-                password text,
-                salt text,
-                password_created timestamp,
+                emails list<text>,
+                name text,
                 PRIMARY KEY (id)
             );
         '));
     }
 
-    private function createUserByEmailRefTable()
+    private function createCredentialsTable()
     {
         $this->client->execute(new SimpleStatement('
-            CREATE TABLE user_by_email (
-                id text,
+            CREATE TABLE credentials (
                 email text,
+                profile_id text,
                 roles list<text>,
                 password text,
                 salt text,

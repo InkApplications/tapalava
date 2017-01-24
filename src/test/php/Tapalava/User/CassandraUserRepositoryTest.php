@@ -6,10 +6,11 @@ use Cassandra;
 use Cassandra\Collection;
 use Cassandra\ExecutionOptions;
 use Cassandra\Statement;
+use Doctrine\Common\Collections\ArrayCollection;
 use M6Web\Bundle\CassandraBundle\Cassandra\Client;
 use PHPUnit_Framework_TestCase as TestCase;
 use Tapalava\User\CassandraUserRepository;
-use Tapalava\User\User;
+use Tapalava\User\Credentials;
 
 class CassandraUserRepositoryTest extends TestCase
 {
@@ -35,9 +36,9 @@ class CassandraUserRepositoryTest extends TestCase
         };
 
         $repository = new CassandraUserRepository($stubClient);
-        $user = new User('fake-id-001', 'tester@tapalava.com', ['ROLE_USER', 'ROLE_TEST'], 'test-password', 'salty');
+        $user = new Credentials('fake-id-001', 'tester@tapalava.com', ['ROLE_USER', 'ROLE_TEST'], 'test-password', 'salty');
 
-        $repository->saveUserCredentials($user);
+        $repository->saveCredentials($user);
     }
 
     /**
@@ -54,7 +55,8 @@ class CassandraUserRepositoryTest extends TestCase
 
         $this->assertEquals('test-password', $result->getPassword());
         $this->assertEquals('test-salt', $result->getSalt());
-        $this->assertEquals('tester@tapalava.com', $result->getUsername());
+        $this->assertEquals('tester@tapalava.com', $result->getEmail());
+        $this->assertEquals('test-id-001', $result->getUsername());
         $this->assertEquals(2, count($result->getRoles()));
         $this->assertEquals('role-a', $result->getRoles()[0]);
         $this->assertEquals('role-b', $result->getRoles()[1]);
@@ -74,9 +76,10 @@ class CassandraUserRepositoryTest extends TestCase
 
         $result = $repository->findCredentialsByEmail('tester@tapalava.com');
 
+        $this->assertEquals('required-id', $result->getUsername());
+        $this->assertEquals('required-email', $result->getEmail());
         $this->assertNull($result->getPassword());
         $this->assertNull($result->getSalt());
-        $this->assertNull($result->getUsername());
         $this->assertEquals(0, count($result->getRoles()));
         $this->assertNull($result->getPasswordCreated());
     }
@@ -86,7 +89,7 @@ class CassandraUserRepositoryTest extends TestCase
      * even when null values are returned.
      *
      * @test
-     * @expectedException InkApplications\Knock\User\CredentialsNotFoundException
+     * @expectedException \InkApplications\Knock\User\CredentialsNotFoundException
      */
     public function findZeroCredentialsByEmail()
     {
@@ -101,12 +104,12 @@ class CassandraUserRepositoryTest extends TestCase
         $client = self::zeroRowClient();
         $repository = new CassandraUserRepository($client);
 
-        /** @var User $test */
+        /** @var Credentials $test */
         $test = $repository->createUser('tester@tapalava.com');
 
         $this->assertEquals('tester@tapalava.com', $test->getUsername());
-        $this->assertInstanceOf(User::class, $test);
-        $this->assertNotNull($test->getId());
+        $this->assertInstanceOf(Credentials::class, $test);
+        $this->assertNotNull($test->getUsername());
         $this->assertEquals(1, $test->getRoles());
         $this->assertEquals('ROLE_USER', $test->getRoles()[0]);
     }
@@ -117,24 +120,19 @@ class CassandraUserRepositoryTest extends TestCase
         return new class extends Client {
             public function __construct() {}
             public function execute(Statement $statement, ExecutionOptions $options = null) {
-                return new class {
-                    public function count() { return 1; }
-                    public function first()
-                    {
-                        $roles = new Collection(Cassandra::TYPE_VARCHAR);
-                        $roles->add('role-a');
-                        $roles->add('role-b');
-                        return [
-                            'id' => 'test-id-001',
-                            'email' => 'tester@tapalava.com',
-                            'roles' => $roles,
-                            'password' => 'test-password',
-                            'salt' => 'test-salt',
-                            'password_created' => 1454475417
-                        ];
-                    }
 
-                };
+                $roles = new Collection(Cassandra::TYPE_VARCHAR);
+                $roles->add('role-a');
+                $roles->add('role-b');
+
+                return new ArrayCollection([[
+                    'profile_id' => 'test-id-001',
+                    'email' => 'tester@tapalava.com',
+                    'roles' => $roles,
+                    'password' => 'test-password',
+                    'salt' => 'test-salt',
+                    'password_created' => new Cassandra\Timestamp(1454475417)
+                ]]);
             }
         };
     }
@@ -145,11 +143,12 @@ class CassandraUserRepositoryTest extends TestCase
         return new class extends Client {
             public function __construct() {}
             public function execute(Statement $statement, ExecutionOptions $options = null) {
-                return new class {
-                    public function count() { return 1; }
-                    public function first() { return []; }
-
-                };
+                return new ArrayCollection([
+                    [
+                        'profile_id' => 'required-id',
+                        'email' => 'required-email',
+                    ]
+                ]);
             }
         };
     }

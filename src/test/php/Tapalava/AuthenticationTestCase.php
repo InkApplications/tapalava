@@ -7,6 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Tapalava\User\Credentials;
 use Tapalava\User\User;
 
 abstract class AuthenticationTestCase extends WebTestCase
@@ -54,8 +55,8 @@ abstract class AuthenticationTestCase extends WebTestCase
         $this->assertEquals($expectedPath, $actualPath);
     }
 
-    private function createDefaultTestUser(): User
+    private function createDefaultTestUser(): Credentials
     {
-        return new User('fake-test-user', 'testuser@tapalava.com', ['ROLE_USER']);
+        return new Credentials('fake-test-user', 'testuser@tapalava.com', ['ROLE_USER']);
     }
 }
